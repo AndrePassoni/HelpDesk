@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  TECHNICIAN
+  CLIENT
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
+
+model User {
+  id             String   @id @default(uuid())
+  name           String
+  email          String   @unique
+  password       String
+  role           Role
+  imageUrl       String?
+  availableHours String[] // Array de strings como ['08:00', '09:00'] (Apenas p/ Técnicos)
+  
+  // Relacionamentos para Chamados (Tickets)
+  clientTickets     Ticket[] @relation("ClientTickets")
+  technicianTickets Ticket[] @relation("TechnicianTickets")
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  price       Float
+  isActive    Boolean  @default(true) // Usado para Soft Delete
+
+  tickets     Ticket[] // Relacionamento NxN com Chamados
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Ticket {
+  id           Int          @id @default(autoincrement()) // Usado para mostrar 00001, etc
+  title        String
+  description  String
+  status       TicketStatus @default(OPEN)
+  
+  clientId     String
+  client       User         @relation("ClientTickets", fields: [clientId], references: [id], onDelete: Cascade)
+  
+  technicianId String
+  technician   User         @relation("TechnicianTickets", fields: [technicianId], references: [id])
+  
+  services     Service[]    // Serviços vinculados a este chamado (Base + Adicionais)
+  
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
