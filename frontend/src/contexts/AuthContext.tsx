@@ -35,13 +35,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function signIn({ email, password }: any) {
     try {
-      const response = await api.post("/sessions", { email, password });
-      const { token, user } = response.data;
+      // MOCK AUTHENTICATION: Para testar as diferentes Roles no Frontend.
+      // Se o email contiver "admin", loga como Admin. "tecnico" como Técnico, etc.
+      let mockRole: "ADMIN" | "TECHNICIAN" | "CLIENT" = "CLIENT";
+      if (email.includes("admin")) mockRole = "ADMIN";
+      else if (email.includes("tecnico")) mockRole = "TECHNICIAN";
 
-      localStorage.setItem("@HelpDesk:token", token);
-      localStorage.setItem("@HelpDesk:user", JSON.stringify(user));
+      const mockUser: User = {
+        id: "mock-123",
+        name: email.split("@")[0],
+        email: email,
+        role: mockRole,
+      };
 
-      setUser(user);
+      const mockToken = "mock-jwt-token";
+
+      localStorage.setItem("@HelpDesk:token", mockToken);
+      localStorage.setItem("@HelpDesk:user", JSON.stringify(mockUser));
+
+      setUser(mockUser);
     } catch (error) {
       console.error(error);
       throw error;

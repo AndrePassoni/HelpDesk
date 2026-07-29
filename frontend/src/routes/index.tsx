@@ -3,6 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 
 import { Login } from "../pages/Login";
 import { Dashboard } from "../pages/Dashboard";
+import { DashboardLayout } from "../layouts/DashboardLayout";
 
 export function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -10,10 +11,14 @@ export function AppRoutes() {
   return (
     <Routes>
       {isAuthenticated ? (
-        <>
+        <Route element={<DashboardLayout />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/new-ticket" element={<Dashboard />} />
+          <Route path="/technicians" element={<Dashboard />} />
+          <Route path="/customers" element={<Dashboard />} />
+          <Route path="/services" element={<Dashboard />} />
           <Route path="*" element={<Navigate to="/" replace />} />
-        </>
+        </Route>
       ) : (
         <>
           <Route path="/" element={<Login />} />
