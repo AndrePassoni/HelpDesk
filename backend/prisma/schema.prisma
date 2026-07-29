@@ -61,6 +61,7 @@ model Ticket {
   technician   User         @relation("TechnicianTickets", fields: [technicianId], references: [id])
   
   services     Service[]    // Serviços vinculados a este chamado (Base + Adicionais)
+  attachments  String[]     // Nomes dos arquivos de anexos salvos
   
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
