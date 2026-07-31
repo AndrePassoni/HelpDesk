@@ -25,8 +25,9 @@ export function Login() {
     try {
       await signIn(data);
       navigate("/");
-    } catch (error) {
-      alert("Credenciais inválidas. Tente novamente.");
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Credenciais inválidas. Tente novamente.";
+      alert(message);
     }
   }
 
