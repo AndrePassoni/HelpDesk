@@ -1,4 +1,4 @@
-import { Plus, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { mockTicketsData } from "../mocks/tickets";
 import { ClientTicketsTable } from "../components/tickets/ClientTicketsTable";
@@ -20,13 +20,6 @@ export function Dashboard() {
           </h1>
           <p className="text-sm text-gray-400 mt-1">Gerencie e acompanhe todos os chamados abertos.</p>
         </div>
-        
-        {role === "CLIENT" && (
-          <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-white font-bold py-2.5 px-4 rounded-lg transition-colors whitespace-nowrap w-fit">
-            <Plus size={20} />
-            <span>Novo Chamado</span>
-          </button>
-        )}
       </header>
 
       {/* Toolbar / Search */}
