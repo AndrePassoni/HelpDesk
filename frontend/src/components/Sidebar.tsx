@@ -23,12 +23,26 @@ export function Sidebar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .slice(0, 2)
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase()
+    : "U";
+
   return (
     <aside className="w-64 bg-gray-100 min-h-screen flex flex-col justify-between border-r border-gray-200">
       <div>
-        <div className="flex items-center gap-3 p-8 mb-4">
-          <img src={LogoIcon} alt="HelpDesk Logo" className="w-8 h-8" />
-          <span className="text-2xl font-bold text-gray-600">HelpDesk</span>
+        <div className="flex items-center gap-3 px-4 py-6 mb-4">
+          <img src={LogoIcon} alt="HelpDesk Logo" className="w-11 h-11" />
+          <div className="flex flex-col">
+            <span className="text-xl font-bold text-gray-600 tracking-tight">HelpDesk</span>
+            <span className="text-[10px] font-bold text-brand-light tracking-wider">
+              {role === "CLIENT" ? "cliente" : role.toLowerCase()}
+            </span>
+          </div>
         </div>
 
         <nav className="flex flex-col gap-2 px-4">
@@ -105,31 +119,37 @@ export function Sidebar() {
           onClick={() => setMenuOpen((p) => !p)}
           className="flex items-center gap-3 px-2 py-2 w-full rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
         >
-          <div className="w-10 h-10 rounded-full bg-brand-base flex items-center justify-center text-gray-600 font-bold uppercase shrink-0">
-            {user?.name ? user.name.charAt(0) : "U"}
+          <div className="w-8 h-8 rounded-full bg-brand-base flex items-center justify-center text-gray-600 font-bold uppercase shrink-0">
+            <span className="text-[14px] tracking-[1.4px]">{initials}</span>
           </div>
           <div className="flex flex-col overflow-hidden items-start">
-            <span className="text-sm font-bold text-gray-600 truncate">{user?.name || "Usuário Mock"}</span>
-            <span className="text-[10px] text-gray-400 truncate uppercase">{role}</span>
+            <span className="text-sm font-normal text-gray-600 truncate leading-[1.4]">
+              {user?.name || "Usuário Cliente"}
+            </span>
+            <span className="text-xs font-normal text-gray-400 truncate leading-[1.4]">
+              {user?.email || "user.client@test.com"}
+            </span>
           </div>
         </button>
 
         {menuOpen && (
           <div
             ref={menuRef}
-            className="absolute left-[calc(100%+8px)] bottom-2 z-50 w-48 bg-gray-100 rounded-xl shadow-lg p-3"
+            className="absolute left-[calc(100%+8px)] bottom-0 z-50 w-49.5 bg-gray-100 rounded-xl shadow-lg p-4"
           >
-            <span className="block px-3 pb-2 text-[10px] font-bold text-gray-400 uppercase tracking-wider">opções</span>
+            <span className="block px-3 pb-2 text-[10px] font-bold text-gray-400 uppercase tracking-[0.6px] leading-[1.4]">
+              opções
+            </span>
             <button
               onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-normal text-gray-500 hover:bg-gray-200 transition-colors"
+              className="flex items-center gap-2 w-full px-3 py-2 rounded-[5px] text-base font-normal text-gray-500 hover:bg-gray-200 transition-colors leading-[1.4]"
             >
               <User size={20} />
               Perfil
             </button>
             <button
               onClick={signOut}
-              className="flex items-center gap-3 w-full px-3 py-2 rounded-md text-sm font-normal text-feedback-danger hover:bg-gray-200 transition-colors"
+              className="flex items-center gap-2 w-full px-3 py-2 rounded-[5px] text-base font-normal text-feedback-danger hover:bg-gray-200 transition-colors leading-[1.4]"
             >
               <LogOut size={20} />
               Sair
