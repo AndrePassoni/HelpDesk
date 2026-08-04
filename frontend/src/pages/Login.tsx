@@ -40,7 +40,7 @@ export function Login() {
       {/* Right Side - Form Container */}
       <div className="w-full md:w-1/2 flex flex-col items-center bg-gray-600 p-4 pt-16 overflow-y-auto md:rounded-tl-[64px] custom-scrollbar">
         
-        <div className="w-full max-w-[420px] flex flex-col items-center">
+        <div className="w-full max-w-105 flex flex-col items-center">
           
           {/* Logo */}
           <div className="flex items-center gap-2 mb-12">

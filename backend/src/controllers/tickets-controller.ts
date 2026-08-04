@@ -71,10 +71,11 @@ export class TicketsController {
       title: z.string().min(3),
       description: z.string().min(5),
       technicianId: z.string().uuid(),
+      serviceIds: z.array(z.string().uuid()).optional().default([]),
     });
 
     // Como pode vir FormData (por causa dos anexos), usamos .parse
-    const { title, description, technicianId } = createSchema.parse(request.body);
+    const { title, description, technicianId, serviceIds } = createSchema.parse(request.body);
     const clientId = request.user!.id;
 
     // Verificar se o technician existe
@@ -105,6 +106,9 @@ export class TicketsController {
         clientId,
         technicianId,
         attachments,
+        services: {
+          connect: serviceIds.map((id) => ({ id })),
+        },
       },
     });
 

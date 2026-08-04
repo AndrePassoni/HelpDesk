@@ -7,9 +7,8 @@ export const techniciansRoutes = Router();
 const techniciansController = new TechniciansController();
 
 techniciansRoutes.use(ensureAuthenticated);
-techniciansRoutes.use(verifyUserRole(["ADMIN"]));
 
 techniciansRoutes.get("/", techniciansController.index);
-techniciansRoutes.post("/", techniciansController.create);
-techniciansRoutes.put("/:id", techniciansController.update);
-techniciansRoutes.delete("/:id", techniciansController.delete);
+techniciansRoutes.post("/", verifyUserRole(["ADMIN"]), techniciansController.create);
+techniciansRoutes.put("/:id", verifyUserRole(["ADMIN"]), techniciansController.update);
+techniciansRoutes.delete("/:id", verifyUserRole(["ADMIN"]), techniciansController.delete);

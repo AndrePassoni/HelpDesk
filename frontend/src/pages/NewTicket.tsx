@@ -26,7 +26,7 @@ export function NewTicket() {
   const navigate = useNavigate();
 
   const [services, setServices] = useState<Service[]>([]);
-  const [technicians, setTechnicians] = useState<TechnicianService[]>([]);
+  const [technicians, setTechnicians] = useState<Technician[]>([]);
 
   useEffect(() => {
     api.get("/services").then((res) => setServices(res.data));
@@ -52,6 +52,7 @@ export function NewTicket() {
         title: data.title,
         description: data.description,
         technicianId: data.technicianId,
+        serviceIds: [data.serviceId],
       });
       alert("Chamado criado com sucesso!");
       navigate("/");
