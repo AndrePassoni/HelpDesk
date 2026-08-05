@@ -1,4 +1,5 @@
 import { Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { Ticket } from "../../mocks/tickets";
 import { getInitials, formatDate, formatCurrency, mapStatus } from "../../mocks/tickets";
 import { StatusTag } from "../StatusTag";
@@ -8,10 +9,12 @@ interface ClientTicketsTableProps {
 }
 
 export function ClientTicketsTable({ tickets }: ClientTicketsTableProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white border border-gray-500 rounded-xl overflow-hidden shadow-sm flex-1">
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[800px]">
+        <table className="w-full text-left border-collapse min-w-200">
           <thead>
             <tr className="border-b border-gray-500">
               <th className="py-4 px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Atualizado em</th>
@@ -47,7 +50,10 @@ export function ClientTicketsTable({ tickets }: ClientTicketsTableProps) {
                     <StatusTag status={mapStatus(ticket.status)} />
                   </td>
                   <td className="py-4 px-6 text-right">
-                    <button className="p-2 bg-gray-500 hover:bg-gray-400 rounded-lg text-gray-300 transition-colors">
+                    <button
+                      onClick={() => navigate(`/tickets/${ticket.id}`)}
+                      className="p-2 bg-gray-500 hover:bg-gray-400 rounded-lg text-gray-300 transition-colors"
+                    >
                       <Eye size={16} />
                     </button>
                   </td>
