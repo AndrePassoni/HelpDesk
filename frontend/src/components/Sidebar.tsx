@@ -3,12 +3,14 @@ import { NavLink } from "react-router-dom";
 import { ClipboardList, LogOut, User, Plus, Users, Briefcase, Wrench } from "lucide-react";
 import LogoIcon from "../assets/Logo_IconLight.svg";
 import { useAuth } from "../hooks/useAuth";
+import { ProfileModal } from "./ProfileModal";
 
 export function Sidebar() {
   const { user, signOut } = useAuth();
   const role = user?.role || "CLIENT";
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileModalOpen, setProfileModalOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -141,7 +143,10 @@ export function Sidebar() {
               opções
             </span>
             <button
-              onClick={() => setMenuOpen(false)}
+              onClick={() => {
+                setMenuOpen(false);
+                setProfileModalOpen(true);
+              }}
               className="flex items-center gap-2 w-full px-3 py-2 rounded-[5px] text-base font-normal text-gray-500 hover:bg-gray-200 transition-colors leading-[1.4]"
             >
               <User size={20} />
@@ -157,6 +162,8 @@ export function Sidebar() {
           </div>
         )}
       </div>
+
+      <ProfileModal isOpen={profileModalOpen} onClose={() => setProfileModalOpen(false)} />
     </aside>
   );
 }
