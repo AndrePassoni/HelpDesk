@@ -1,5 +1,8 @@
-import { X, Image as ImageIcon, Trash2, Lock } from "lucide-react";
+import { useState, useRef } from "react";
+import { X, Image as ImageIcon, Trash2, Lock, Loader2, Check } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import { api } from "../services/api";
+import { ChangePasswordModal } from "./ChangePasswordModal";
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -8,11 +11,101 @@ interface ProfileModalProps {
 
 export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const { user } = useAuth();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  if (!isOpen) return null;
+  const hasChanges = selectedFile !== null;
 
-  const initials = user?.name
-    ? user.name
+  async function handleImageUpload() {
+    fileInputRef.current?.click();
+  }
+
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Por favor, selecione uma imagem válida.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("A imagem deve ter no máximo 5MB.");
+      return;
+    }
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+    setSaved(false);
+  }
+
+  async function handleSave() {
+    if (!selectedFile) return;
+
+    setSaving(true);
+    setSaved(false);
+
+    try {
+      const formData = new FormData();
+      formData.append("avatar", selectedFile);
+
+      await api.patch("/profile/avatar", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      const profileRes = await api.get("/profile");
+      localStorage.setItem("@HelpDesk:user", JSON.stringify(profileRes.data));
+      window.dispatchEvent(new CustomEvent("auth-user-updated", { detail: profileRes.data }));
+
+      setSaved(true);
+      setSelectedFile(null);
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+      setPreviewUrl(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Erro ao atualizar foto de perfil.";
+      alert(message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function handleCloseAll() {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+    }
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setSaved(false);
+    setShowPasswordModal(false);
+    onClose();
+  }
+
+  function handleBackFromPassword() {
+    setShowPasswordModal(false);
+  }
+
+  const userData = user || { name: "Usuário Cliente", email: "user.client@test.com", imageUrl: null };
+
+  const getSaveButtonClasses = () => {
+    if (saving) return "w-full h-10 rounded-[5px] font-bold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2 bg-gray-500 text-gray-200 cursor-not-allowed";
+    if (saved) return "w-full h-10 rounded-[5px] font-bold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2 bg-feedback-done text-gray-100 cursor-not-allowed";
+    if (hasChanges) return "w-full h-10 rounded-[5px] font-bold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2 bg-gray-200 text-gray-600 hover:bg-gray-100";
+    return "w-full h-10 rounded-[5px] font-bold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2 bg-gray-500 text-gray-400 cursor-not-allowed";
+  };
+
+  const displayImage = previewUrl || (userData.imageUrl ? `http://localhost:3333/files/${userData.imageUrl}` : null);
+
+  const initialsStr = userData.name
+    ? userData.name
         .split(" ")
         .slice(0, 2)
         .map((w) => w[0])
@@ -20,14 +113,26 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         .toUpperCase()
     : "U";
 
+  if (!isOpen) return null;
+
+  if (showPasswordModal) {
+    return (
+      <ChangePasswordModal
+        isOpen={true}
+        onBack={handleBackFromPassword}
+        onClose={handleCloseAll}
+      />
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-[440px] bg-gray-600 rounded-[10px] border border-gray-500 shadow-xl overflow-hidden flex flex-col">
+      <div className="w-full max-w-110 bg-gray-600 rounded-[10px] border border-gray-500 shadow-xl overflow-hidden flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between px-7 py-5">
           <span className="text-base font-normal text-gray-200">Perfil</span>
           <button
-            onClick={onClose}
+            onClick={handleCloseAll}
             className="w-6 h-6 flex items-center justify-center text-gray-300 hover:text-gray-100 transition-colors"
           >
             <X size={18} />
@@ -38,30 +143,49 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         <div className="flex flex-col gap-5 px-7 pt-7 pb-8 border-t border-b border-gray-500">
           {/* Avatar & Actions */}
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-brand-base flex items-center justify-center text-gray-600 font-bold text-lg uppercase shrink-0">
-              {user?.imageUrl ? (
+            <div className="w-12 h-12 rounded-full bg-brand-base flex items-center justify-center text-gray-600 font-bold text-lg uppercase shrink-0 relative overflow-hidden">
+              {displayImage ? (
                 <img
-                  src={user.imageUrl}
-                  alt={user.name}
+                  src={displayImage}
+                  alt={userData.name}
                   className="w-full h-full rounded-full object-cover"
                 />
               ) : (
-                initials
+                initialsStr
               )}
             </div>
 
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                className="h-7 px-2.5 bg-gray-500 rounded-[5px] flex items-center gap-2 text-xs font-bold text-feedback-done hover:bg-gray-400 transition-colors cursor-pointer"
+                onClick={handleImageUpload}
+                disabled={saving}
+                className="h-7 px-2.5 bg-gray-500 rounded-[5px] flex items-center gap-2 text-xs font-bold text-feedback-done hover:bg-gray-400 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <ImageIcon size={14} className="text-gray-200" />
-                Nova imagem
+                {saving ? <Loader2 size={14} className="animate-spin text-gray-200" /> : <ImageIcon size={14} className="text-gray-200" />}
+                {saving ? "Carregando..." : "Nova imagem"}
               </button>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+              />
 
               <button
                 type="button"
-                className="w-7 h-7 bg-gray-500 rounded-[5px] flex items-center justify-center text-feedback-danger hover:bg-gray-400 transition-colors cursor-pointer"
+                onClick={() => {
+                  if (previewUrl) {
+                    URL.revokeObjectURL(previewUrl);
+                  }
+                  setSelectedFile(null);
+                  setPreviewUrl(null);
+                  setSaved(false);
+                }}
+                disabled={saving || !hasChanges}
+                className="w-7 h-7 bg-gray-500 rounded-[5px] flex items-center justify-center text-feedback-danger hover:bg-gray-400 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Trash2 size={14} />
               </button>
@@ -79,7 +203,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 <input
                   type="text"
                   readOnly
-                  value={user?.name || "Usuário Cliente"}
+                  value={userData.name || "Usuário Cliente"}
                   className="w-full bg-transparent text-base font-bold text-gray-100 focus:outline-none"
                 />
               </div>
@@ -94,7 +218,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 <input
                   type="email"
                   readOnly
-                  value={user?.email || "user.client@test.com"}
+                  value={userData.email || "user.client@test.com"}
                   className="w-full bg-transparent text-base font-bold text-gray-400 focus:outline-none"
                 />
               </div>
@@ -115,7 +239,9 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               </div>
               <button
                 type="button"
-                className="absolute right-0 bottom-1.5 h-7 px-2.5 bg-gray-500 rounded-[5px] flex items-center gap-1.5 text-xs font-bold text-feedback-done hover:bg-gray-400 transition-colors cursor-pointer"
+                disabled={saving}
+                onClick={() => setShowPasswordModal(true)}
+                className="absolute right-0 bottom-1.5 h-7 px-2.5 bg-gray-500 rounded-[5px] flex items-center gap-1.5 text-xs font-bold text-feedback-done hover:bg-gray-400 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Lock size={12} className="text-gray-200" />
                 Alterar
@@ -128,9 +254,17 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         <div className="px-7 py-6 flex items-center justify-center">
           <button
             type="button"
-            className="w-full h-10 bg-gray-200 text-gray-600 font-bold text-sm rounded-[5px] hover:bg-gray-100 transition-colors cursor-pointer"
+            onClick={handleSave}
+            disabled={saving || !hasChanges || saved}
+            className={getSaveButtonClasses()}
           >
-            Salvar
+            {saving && <Loader2 size={16} className="animate-spin" />}
+            {saved && <Check size={16} />}
+            {saving
+              ? "Salvando..."
+              : saved
+              ? "Salvo"
+              : "Salvar"}
           </button>
         </div>
       </div>

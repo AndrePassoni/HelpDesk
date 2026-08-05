@@ -38,6 +38,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           signOut();
         });
     }
+
+    // Listen for profile updates from ProfileModal
+    function handleUserUpdated(event: CustomEvent<User>) {
+      setUser(event.detail);
+      localStorage.setItem("@HelpDesk:user", JSON.stringify(event.detail));
+    }
+
+    window.addEventListener("auth-user-updated", handleUserUpdated as EventListener);
+    return () => window.removeEventListener("auth-user-updated", handleUserUpdated as EventListener);
   }, []);
 
   async function signIn({ email, password }: any) {
