@@ -81,7 +81,7 @@ export function TicketDetail() {
           </div>
           {user?.role === "TECHNICIAN" && (
             <div className="flex items-center gap-3">
-              {ticket.status === "IN_PROGRESS" && (
+              {ticket.status !== "CLOSED" && (
                 <button
                   onClick={() => handleUpdateStatus("CLOSED")}
                   className="h-10 bg-gray-500 hover:bg-gray-400 text-gray-200 font-bold text-sm rounded-[5px] px-4 flex items-center gap-2 transition-colors"

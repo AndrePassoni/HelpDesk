@@ -105,7 +105,7 @@ export function EditTicket() {
           </div>
           {isTechnician && (
             <div className="flex items-center gap-3">
-              {ticket.status === "IN_PROGRESS" && (
+              {ticket.status !== "CLOSED" && (
                 <button
                   onClick={() => handleUpdateStatus("CLOSED")}
                   disabled={saving}
