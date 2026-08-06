@@ -57,8 +57,8 @@ export function ChangePasswordModal({ isOpen, onBack, onClose }: ChangePasswordM
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-[440px] bg-gray-600 rounded-[10px] border border-gray-500 shadow-xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-110 bg-gray-600 rounded-[10px] border border-gray-500 shadow-xl overflow-hidden flex flex-col">
         {/* Header */}
         <div className="flex items-center gap-3 px-7 pt-5 pb-6">
           <button
