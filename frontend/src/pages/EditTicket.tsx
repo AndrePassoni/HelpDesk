@@ -3,9 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader2, AlertCircle, Clock2, CircleCheckBig, Plus, Trash2 } from "lucide-react";
 import { api } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
-import type { Ticket } from "../mocks/tickets";
+import type { Ticket, Service } from "../mocks/tickets";
 import { getInitials, formatDate, formatCurrency, mapStatus } from "../mocks/tickets";
 import { StatusTag } from "../components/StatusTag";
+import { AddServicesModal } from "../components/AddServicesModal";
 
 const statusConfigMap = {
   open: { bg: "bg-[#CC3D6A33]", text: "text-[#CC3D6AFF]", label: "Aberto", icon: AlertCircle },
@@ -22,6 +23,7 @@ export function EditTicket() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [services, setServices] = useState<Ticket["services"]>([]);
+  const [isAddServicesOpen, setIsAddServicesOpen] = useState(false);
 
   useEffect(() => {
     api.get(`/tickets/${id}`)
@@ -60,6 +62,12 @@ export function EditTicket() {
   function handleRemoveService(serviceId: string) {
     setServices((prev) => prev.filter((s) => s.id !== serviceId));
   }
+
+  function handleAddServices(newServices: Service[]) {
+    setServices((prev) => [...prev, ...newServices]);
+  }
+
+  const existingServiceIds = services.map((s) => s.id);
 
   if (loading) {
     return (
@@ -190,7 +198,10 @@ export function EditTicket() {
             <div className="border border-gray-500 rounded-[10px] p-6 flex flex-col gap-4">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-normal text-gray-400">Serviços adicionais</span>
-                <button className="w-7 h-7 bg-gray-200 hover:bg-gray-100 rounded-[5px] flex items-center justify-center transition-colors">
+                <button
+                  onClick={() => setIsAddServicesOpen(true)}
+                  className="w-7 h-7 bg-gray-200 hover:bg-gray-100 rounded-[5px] flex items-center justify-center transition-colors"
+                >
                   <Plus size={14} className="text-gray-600" />
                 </button>
               </div>
@@ -279,6 +290,12 @@ export function EditTicket() {
           </div>
         </div>
       </div>
+      <AddServicesModal
+        isOpen={isAddServicesOpen}
+        onClose={() => setIsAddServicesOpen(false)}
+        onAddServices={handleAddServices}
+        existingServiceIds={existingServiceIds}
+      />
     </div>
   );
 }
