@@ -23,10 +23,12 @@ export interface Ticket {
   client: {
     name: string;
     email: string;
+    imageUrl?: string | null;
   };
   technician: {
     name: string;
     email: string;
+    imageUrl?: string | null;
   };
   services: Service[];
 }

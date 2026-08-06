@@ -21,10 +21,10 @@ export class TicketsController {
       where: whereClause,
       include: {
         client: {
-          select: { name: true, email: true },
+          select: { id: true, name: true, email: true, imageUrl: true },
         },
         technician: {
-          select: { name: true, email: true },
+          select: { id: true, name: true, email: true, imageUrl: true },
         },
         services: true,
       },
@@ -45,8 +45,8 @@ export class TicketsController {
     const ticket = await prisma.ticket.findUnique({
       where: { id },
       include: {
-        client: { select: { id: true, name: true, email: true } },
-        technician: { select: { id: true, name: true, email: true } },
+        client: { select: { id: true, name: true, email: true, imageUrl: true } },
+        technician: { select: { id: true, name: true, email: true, imageUrl: true } },
         services: true,
       },
     });

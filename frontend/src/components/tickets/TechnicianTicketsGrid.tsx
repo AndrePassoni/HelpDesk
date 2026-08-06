@@ -1,4 +1,5 @@
-import { Pencil, Clock2, CircleCheckBig } from "lucide-react";
+import { PencilLine, Clock2, CircleCheckBig } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import type { Ticket, TicketStatus } from "../../mocks/tickets";
 import { getInitials, formatDate, formatCurrency, mapStatus } from "../../mocks/tickets";
 import { StatusTag } from "../StatusTag";
@@ -29,6 +30,7 @@ const statusLabelMap: Record<TicketStatus, "open" | "progress" | "done"> = {
 };
 
 export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
+  const navigate = useNavigate();
   const grouped = groupTicketsByStatus(tickets);
   const displayOrder: TicketStatus[] = ["IN_PROGRESS", "OPEN", "CLOSED"];
 
@@ -60,8 +62,11 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
                         {String(ticket.id).padStart(5, "0")}
                       </span>
                       <div className="flex items-center gap-2">
-                        <button className="p-2 bg-gray-500 hover:bg-gray-400 rounded-lg text-gray-300 transition-colors">
-                          <Pencil size={16} />
+                        <button
+                          onClick={() => navigate(`/tickets/${ticket.id}/edit`)}
+                          className="p-2 bg-gray-500 hover:bg-gray-400 rounded-lg text-gray-300 transition-colors"
+                        >
+                          <PencilLine size={16} />
                         </button>
                         {status === "OPEN" && (
                           <button className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors">
@@ -92,8 +97,16 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
 
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-full bg-brand-dark flex items-center justify-center text-[10px] font-bold text-gray-600 uppercase shrink-0">
-                          {getInitials(ticket.client.name)}
+                        <div className="w-6 h-6 rounded-full bg-brand-dark flex items-center justify-center text-[10px] font-bold text-gray-600 uppercase shrink-0 relative overflow-hidden">
+                          {ticket.client.imageUrl ? (
+                            <img
+                              src={`http://localhost:3333/files/${ticket.client.imageUrl}`}
+                              alt={ticket.client.name}
+                              className="w-full h-full rounded-full object-cover"
+                            />
+                          ) : (
+                            getInitials(ticket.client.name)
+                          )}
                         </div>
                         <span className="text-xs font-bold text-gray-100 whitespace-nowrap">
                           {ticket.client.name}

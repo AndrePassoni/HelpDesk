@@ -6,6 +6,7 @@ import { Register } from "../pages/Register";
 import { Dashboard } from "../pages/Dashboard";
 import { NewTicket } from "../pages/NewTicket";
 import { TicketDetail } from "../pages/TicketDetail";
+import { EditTicket } from "../pages/EditTicket";
 import { DashboardLayout } from "../layouts/DashboardLayout";
 
 export function AppRoutes() {
@@ -18,6 +19,7 @@ export function AppRoutes() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/new-ticket" element={<NewTicket />} />
           <Route path="/tickets/:id" element={<TicketDetail />} />
+          <Route path="/tickets/:id/edit" element={<EditTicket />} />
           <Route path="/technicians" element={<Dashboard />} />
           <Route path="/customers" element={<Dashboard />} />
           <Route path="/services" element={<Dashboard />} />

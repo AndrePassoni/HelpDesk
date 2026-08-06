@@ -1,4 +1,4 @@
-import { Clock, HelpCircle, CheckCircle2 } from "lucide-react";
+import { Clock2, HelpCircle, CircleCheckBig } from "lucide-react";
 
 interface StatusTagProps {
   status: "open" | "progress" | "done";
@@ -17,14 +17,14 @@ const statusConfig = {
     bg: "bg-[#355EC533]",
     text: "text-[#4D5ECFFF]",
     defaultLabel: "Em atendimento",
-    icon: Clock,
+    icon: Clock2,
     fontWeight: "font-bold",
   },
   done: {
     bg: "bg-[#508B2633]",
     text: "text-[#508B26FF]",
     defaultLabel: "Encerrado",
-    icon: CheckCircle2,
+    icon: CircleCheckBig,
     fontWeight: "font-bold",
   },
 };

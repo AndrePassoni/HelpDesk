@@ -40,8 +40,16 @@ export function ClientTicketsTable({ tickets }: ClientTicketsTableProps) {
                   <td className="py-4 px-6 text-sm text-gray-400">{formatCurrency(total)}</td>
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-brand-base flex items-center justify-center text-[10px] font-bold text-gray-100 uppercase shrink-0">
-                        {getInitials(ticket.technician.name)}
+                      <div className="w-6 h-6 rounded-full bg-brand-base flex items-center justify-center text-[10px] font-bold text-gray-100 uppercase shrink-0 relative overflow-hidden">
+                        {ticket.technician.imageUrl ? (
+                          <img
+                            src={`http://localhost:3333/files/${ticket.technician.imageUrl}`}
+                            alt={ticket.technician.name}
+                            className="w-full h-full rounded-full object-cover"
+                          />
+                        ) : (
+                          getInitials(ticket.technician.name)
+                        )}
                       </div>
                       <span className="text-sm text-gray-400 whitespace-nowrap">{ticket.technician.name}</span>
                     </div>
