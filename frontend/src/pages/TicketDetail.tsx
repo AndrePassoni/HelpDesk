@@ -101,7 +101,8 @@ export function TicketDetail() {
               )}
             </div>
           )}
-        </header>
+        </div>
+      </header>
 
       <div className="flex gap-6 w-full max-w-200 mx-auto">
         <div className="w-120 border border-gray-500 rounded-[10px] p-6 flex flex-col gap-5">
