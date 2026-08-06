@@ -92,7 +92,11 @@ export function Login() {
             <h2 className="text-lg font-bold text-gray-100">Ainda não tem uma conta?</h2>
             <p className="text-sm text-gray-400 mt-1 mb-6">Cadastre agora mesmo</p>
             
-            <button className="w-full bg-gray-500 hover:bg-gray-400 text-gray-100 font-bold py-3 rounded-md transition-colors">
+            <button
+              type="button"
+              onClick={() => navigate("/register")}
+              className="w-full bg-gray-500 hover:bg-gray-400 text-gray-100 font-bold py-3 rounded-md transition-colors"
+            >
               Criar conta
             </button>
           </div>
