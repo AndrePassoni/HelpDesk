@@ -1,7 +1,6 @@
 import { PrismaClient, Role, TicketStatus } from '@prisma/client'
 import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
-import bcrypt from 'bcryptjs'
 
 const connectionString = process.env.DATABASE_URL
 const pool = new Pool({ connectionString })
@@ -45,98 +44,50 @@ const descriptions = [
 ]
 
 async function main() {
-  const password = await bcrypt.hash('123456', 8)
+  // Buscar técnicos, clientes e serviços existentes
+  const technicians = await prisma.user.findMany({
+    where: { role: Role.TECHNICIAN },
+  })
 
-  // Criar 1 Admin
-  const admin = await prisma.user.upsert({
-    where: { email: 'admin@helpdesk.com' },
-    update: {},
-    create: {
-      email: 'admin@helpdesk.com',
-      name: 'Administrador',
-      password,
-      role: Role.ADMIN,
-    },
+  const clients = await prisma.user.findMany({
+    where: { role: Role.CLIENT },
   })
-  console.log('Admin criado:', admin.email)
 
-  // Criar 3 Técnicos
-  const tech1 = await prisma.user.upsert({
-    where: { email: 'tech1@helpdesk.com' },
-    update: {},
-    create: {
-      email: 'tech1@helpdesk.com',
-      name: 'Técnico 1',
-      password,
-      role: Role.TECHNICIAN,
-      availableHours: ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'],
-    },
+  const services = await prisma.service.findMany({
+    where: { isActive: true },
   })
-  
-  const tech2 = await prisma.user.upsert({
-    where: { email: 'tech2@helpdesk.com' },
-    update: {},
-    create: {
-      email: 'tech2@helpdesk.com',
-      name: 'Técnico 2',
-      password,
-      role: Role.TECHNICIAN,
-      availableHours: ['10:00', '11:00', '12:00', '13:00', '16:00', '17:00', '18:00', '19:00'],
-    },
-  })
-  
-  const tech3 = await prisma.user.upsert({
-    where: { email: 'tech3@helpdesk.com' },
-    update: {},
-    create: {
-      email: 'tech3@helpdesk.com',
-      name: 'Técnico 3',
-      password,
-      role: Role.TECHNICIAN,
-      availableHours: ['12:00', '13:00', '14:00', '15:00', '18:00', '19:00', '20:00', '21:00'],
-    },
-  })
-  console.log('Técnicos criados')
 
-  // Criar 5 Clientes
-  const clients = []
-  for (let i = 1; i <= 5; i++) {
-    const client = await prisma.user.upsert({
-      where: { email: `cliente${i}@test.com` },
-      update: {},
-      create: {
-        email: `cliente${i}@test.com`,
-        name: `Cliente ${i}`,
-        password,
-        role: Role.CLIENT,
-      },
-    })
-    clients.push(client)
+  if (technicians.length === 0) {
+    console.log('Nenhum técnico encontrado. Execute o seed principal primeiro.')
+    return
   }
-  console.log('Clientes criados')
 
-  // Criar 5 Serviços
-  const services = [
-    { name: 'Instalação e atualização de softwares', description: 'Serviço padrão de instalação', price: 80.0 },
-    { name: 'Instalação e atualização de hardwares', description: 'Troca e upgrade de peças', price: 150.0 },
-    { name: 'Diagnóstico e remoção de vírus', description: 'Limpeza do sistema', price: 100.0 },
-    { name: 'Suporte a impressoras', description: 'Configuração e rede', price: 75.0 },
-    { name: 'Backup e recuperação de dados', description: 'Restauração segura', price: 200.0 },
-  ]
-
-  const createdServices = []
-  for (const s of services) {
-    const service = await prisma.service.create({
-      data: s
-    })
-    createdServices.push(service)
+  if (clients.length === 0) {
+    console.log('Nenhum cliente encontrado. Criando clientes de teste...')
+    // Criar alguns clientes se não existirem
+    for (let i = 1; i <= 5; i++) {
+      await prisma.user.upsert({
+        where: { email: `cliente${i}@test.com` },
+        update: {},
+        create: {
+          email: `cliente${i}@test.com`,
+          name: `Cliente ${i}`,
+          password: '123456',
+          role: Role.CLIENT,
+        },
+      })
+    }
+    // Recarregar
+    const newClients = await prisma.user.findMany({ where: { role: Role.CLIENT } })
+    clients.push(...newClients)
   }
-  console.log('Serviços criados')
 
-  // Criar tickets aleatórios (30 total, distribuídos entre status e técnicos)
-  const technicians = [tech1, tech2, tech3]
+  console.log(`Encontrados: ${technicians.length} técnicos, ${clients.length} clientes, ${services.length} serviços`)
+
+  // Criar tickets aleatórios
   const statuses: TicketStatus[] = ['OPEN', 'IN_PROGRESS', 'CLOSED']
-  
+  const ticketsCreated = []
+
   for (let i = 0; i < 30; i++) {
     const technician = technicians[Math.floor(Math.random() * technicians.length)]
     const client = clients[Math.floor(Math.random() * clients.length)]
@@ -146,7 +97,7 @@ async function main() {
     
     // Selecionar 1-3 serviços aleatórios
     const numServices = Math.floor(Math.random() * 3) + 1
-    const shuffledServices = [...createdServices].sort(() => 0.5 - Math.random())
+    const shuffledServices = [...services].sort(() => 0.5 - Math.random())
     const selectedServices = shuffledServices.slice(0, numServices)
 
     const ticket = await prisma.ticket.create({
@@ -163,10 +114,11 @@ async function main() {
       },
     })
 
+    ticketsCreated.push(ticket)
     console.log(`Ticket criado: #${String(ticket.id).padStart(5, '0')} - ${ticket.title} (${status}) - Tech: ${technician.name}`)
   }
 
-  console.log('\nSeed concluído com sucesso!')
+  console.log(`\nTotal de ${ticketsCreated.length} tickets criados com sucesso!`)
 }
 
 main()
