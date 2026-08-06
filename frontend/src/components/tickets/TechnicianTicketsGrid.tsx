@@ -1,5 +1,6 @@
 import { PencilLine, Clock2, CircleCheckBig } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../services/api";
 import type { Ticket, TicketStatus } from "../../mocks/tickets";
 import { getInitials, formatDate, formatCurrency, mapStatus } from "../../mocks/tickets";
 import { StatusTag } from "../StatusTag";
@@ -33,6 +34,16 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
   const navigate = useNavigate();
   const grouped = groupTicketsByStatus(tickets);
   const displayOrder: TicketStatus[] = ["IN_PROGRESS", "OPEN", "CLOSED"];
+
+  async function handleUpdateStatus(ticketId: number, newStatus: "IN_PROGRESS" | "CLOSED") {
+    try {
+      await api.put(`/tickets/${ticketId}`, { status: newStatus });
+      // The parent Dashboard will refetch tickets automatically
+      window.dispatchEvent(new CustomEvent("tickets-updated"));
+    } catch (err) {
+      alert("Erro ao atualizar status");
+    }
+  }
 
   return (
     <div className="flex flex-col gap-10">
@@ -69,13 +80,19 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
                           <PencilLine size={16} />
                         </button>
                         {status === "OPEN" && (
-                          <button className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors">
+                          <button
+                            onClick={() => handleUpdateStatus(ticket.id, "IN_PROGRESS")}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors"
+                          >
                             <Clock2 size={14} />
                             Iniciar
                           </button>
                         )}
                         {status === "IN_PROGRESS" && (
-                          <button className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors">
+                          <button
+                            onClick={() => handleUpdateStatus(ticket.id, "CLOSED")}
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors"
+                          >
                             <CircleCheckBig size={14} />
                             Encerrar
                           </button>

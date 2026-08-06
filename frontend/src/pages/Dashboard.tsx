@@ -16,10 +16,21 @@ export function Dashboard() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    api.get("/tickets")
-      .then((res) => setTickets(res.data))
-      .catch((err) => console.error("Erro ao carregar chamados:", err))
-      .finally(() => setLoading(false));
+    const loadTickets = () => {
+      api.get("/tickets")
+        .then((res) => setTickets(res.data))
+        .catch((err) => console.error("Erro ao carregar chamados:", err))
+        .finally(() => setLoading(false));
+    };
+
+    loadTickets();
+
+    function handleTicketsUpdated() {
+      loadTickets();
+    }
+
+    window.addEventListener("tickets-updated", handleTicketsUpdated);
+    return () => window.removeEventListener("tickets-updated", handleTicketsUpdated);
   }, []);
 
   const filteredTickets = search
