@@ -34,6 +34,10 @@ export function Sidebar() {
         .toUpperCase()
     : "U";
 
+  const avatarUrl = user?.imageUrl
+    ? `http://localhost:3333/files/${user.imageUrl}`
+    : null;
+
   return (
     <aside className="w-64 bg-gray-100 min-h-screen flex flex-col justify-between border-r border-gray-200">
       <div>
@@ -121,8 +125,16 @@ export function Sidebar() {
           onClick={() => setMenuOpen((p) => !p)}
           className="flex items-center gap-3 px-2 py-2 w-full rounded-lg hover:bg-gray-200 transition-colors cursor-pointer"
         >
-          <div className="w-8 h-8 rounded-full bg-brand-base flex items-center justify-center text-gray-600 font-bold uppercase shrink-0">
-            <span className="text-[14px] tracking-[1.4px]">{initials}</span>
+          <div className="w-8 h-8 rounded-full bg-brand-base flex items-center justify-center text-gray-600 font-bold uppercase shrink-0 relative overflow-hidden">
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt={user?.name || "Avatar"}
+                className="w-full h-full rounded-full object-cover"
+              />
+            ) : (
+              <span className="text-[14px] tracking-[1.4px]">{initials}</span>
+            )}
           </div>
           <div className="flex flex-col overflow-hidden items-start">
             <span className="text-sm font-normal text-gray-600 truncate leading-[1.4]">
