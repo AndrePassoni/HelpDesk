@@ -93,7 +93,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     setShowPasswordModal(false);
   }
 
-  const userData = user || { name: "Usuário Cliente", email: "user.client@test.com", imageUrl: null };
+  const userData = user || { name: "Usuário Cliente", email: "user.client@test.com", imageUrl: null, role: "CLIENT" as const, availableHours: [] as string[] };
 
   const getSaveButtonClasses = () => {
     if (saving) return "w-full h-10 rounded-[5px] font-bold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2 bg-gray-500 text-gray-200 cursor-not-allowed";
@@ -112,6 +112,9 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         .join("")
         .toUpperCase()
     : "U";
+
+  const isTechnician = userData.role === "TECHNICIAN";
+  const availableHours = userData.availableHours || [];
 
   if (!isOpen) return null;
 
@@ -249,6 +252,30 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
             </div>
           </div>
         </div>
+
+        {/* Availability Section - Technician Only */}
+        {isTechnician && availableHours.length > 0 && (
+          <div className="flex flex-col gap-3 px-7 py-5 border-t border-gray-500">
+            <div className="flex flex-col">
+              <span className="text-sm font-normal text-gray-200 leading-[1.4]">
+                Disponibilidade
+              </span>
+              <span className="text-xs font-normal text-gray-300 leading-[1.4] mt-0.5">
+                Horários de atendimento definidos pelo admin
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {availableHours.map((hour: string) => (
+                <span
+                  key={hour}
+                  className="inline-flex items-center justify-center px-2 py-1 rounded-full text-xs font-bold text-gray-300 border border-gray-500"
+                >
+                  {hour}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Footer */}
         <div className="px-7 py-6 flex items-center justify-center">

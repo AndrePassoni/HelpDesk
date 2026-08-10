@@ -9,6 +9,7 @@ export interface User {
   email: string;
   role: "ADMIN" | "TECHNICIAN" | "CLIENT";
   imageUrl?: string | null;
+  availableHours?: string[];
 }
 
 interface AuthContextData {
