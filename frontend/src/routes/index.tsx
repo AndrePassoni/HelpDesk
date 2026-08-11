@@ -10,6 +10,7 @@ import { EditTicket } from "../pages/EditTicket";
 import { Technicians } from "../pages/Technicians";
 import { EditTechnician } from "../pages/EditTechnician";
 import { NewTechnician } from "../pages/NewTechnician";
+import { Customers } from "../pages/Customers";
 import { DashboardLayout } from "../layouts/DashboardLayout";
 
 export function AppRoutes() {
@@ -26,7 +27,7 @@ export function AppRoutes() {
           <Route path="/technicians" element={<Technicians />} />
           <Route path="/technicians/new" element={<NewTechnician />} />
           <Route path="/technicians/:id/edit" element={<EditTechnician />} />
-          <Route path="/customers" element={<Dashboard />} />
+          <Route path="/customers" element={<Customers />} />
           <Route path="/services" element={<Dashboard />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
