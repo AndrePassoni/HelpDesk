@@ -39,7 +39,7 @@ export function Sidebar() {
     : null;
 
   return (
-    <aside className="w-64 bg-gray-100 min-h-screen flex flex-col justify-between border-r border-gray-200">
+    <aside className="fixed left-0 top-0 z-40 w-64 min-h-screen bg-gray-100 flex flex-col justify-between border-r border-gray-200">
       <div>
         <div className="flex items-center gap-3 px-4 py-6 mb-4">
           <img src={LogoIcon} alt="HelpDesk Logo" className="w-11 h-11" />

@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Loader2, AlertCircle, Clock, CheckCircle2, PlayCircle, CircleCheckBig, Clock2 } from "lucide-react";
+import { ArrowLeft, Loader2, AlertCircle, Clock, CheckCircle2 } from "lucide-react";
 import { api } from "../services/api";
-import { useAuth } from "../hooks/useAuth";
 import type { Ticket } from "../mocks/tickets";
 import { getInitials, formatDate, formatCurrency, mapStatus } from "../mocks/tickets";
 
@@ -15,20 +14,9 @@ const statusConfigMap = {
 export function TicketDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   const [ticket, setTicket] = useState<Ticket | null>(null);
   const [loading, setLoading] = useState(true);
-
-  async function handleUpdateStatus(newStatus: "IN_PROGRESS" | "CLOSED") {
-    if (!ticket) return;
-    try {
-      await api.put(`/tickets/${id}`, { status: newStatus });
-      setTicket((prev) => prev ? { ...prev, status: newStatus } : null);
-    } catch (err) {
-      alert("Erro ao atualizar status");
-    }
-  }
 
   useEffect(() => {
     api.get(`/tickets/${id}`)
@@ -79,28 +67,6 @@ export function TicketDetail() {
             </button>
             <h1 className="text-2xl font-bold text-brand-dark">Chamado detalhado</h1>
           </div>
-          {user?.role === "TECHNICIAN" && (
-            <div className="flex items-center gap-3">
-              {ticket.status !== "CLOSED" && (
-                <button
-                  onClick={() => handleUpdateStatus("CLOSED")}
-                  className="h-10 bg-gray-500 hover:bg-gray-400 text-gray-200 font-bold text-sm rounded-[5px] px-4 flex items-center gap-2 transition-colors"
-                >
-                  <CircleCheckBig size={18} />
-                  Encerrar
-                </button>
-              )}
-              {ticket.status === "OPEN" && (
-                <button
-                  onClick={() => handleUpdateStatus("IN_PROGRESS")}
-                  className="h-10 bg-gray-200 hover:bg-gray-100 text-gray-600 font-bold text-sm rounded-[5px] px-4 flex items-center gap-2 transition-colors"
-                >
-                  <Clock2 size={18} />
-                  Iniciar atendimento
-                </button>
-              )}
-            </div>
-          )}
         </div>
       </header>
 

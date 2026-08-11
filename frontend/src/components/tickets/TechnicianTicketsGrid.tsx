@@ -59,14 +59,14 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
               <StatusTag status={tagStatus} />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {groupTickets.map((ticket) => {
                 const mainService = ticket.services[0];
                 const total = ticket.services.reduce((sum, s) => sum + s.price, 0);
                 return (
                   <div
                     key={ticket.id}
-                    className="bg-white border border-gray-500 rounded-xl p-5 shadow-sm flex flex-col hover:border-brand-base transition-colors"
+                    className="bg-white border border-gray-500 rounded-xl p-4 md:p-5 shadow-sm flex flex-col hover:border-brand-base transition-colors"
                   >
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-sm font-bold text-gray-400">
@@ -82,18 +82,18 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
                         {status === "OPEN" && (
                           <button
                             onClick={() => handleUpdateStatus(ticket.id, "IN_PROGRESS")}
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors"
+                            className="flex items-center gap-1.5 px-2 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors"
                           >
-                            <Clock2 size={14} />
+                            <Clock2 size={12} />
                             Iniciar
                           </button>
                         )}
                         {status === "IN_PROGRESS" && (
                           <button
                             onClick={() => handleUpdateStatus(ticket.id, "CLOSED")}
-                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors"
+                            className="flex items-center gap-1.5 px-2 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors"
                           >
-                            <CircleCheckBig size={14} />
+                            <CircleCheckBig size={12} />
                             Encerrar
                           </button>
                         )}

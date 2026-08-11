@@ -7,6 +7,9 @@ import { Dashboard } from "../pages/Dashboard";
 import { NewTicket } from "../pages/NewTicket";
 import { TicketDetail } from "../pages/TicketDetail";
 import { EditTicket } from "../pages/EditTicket";
+import { Technicians } from "../pages/Technicians";
+import { EditTechnician } from "../pages/EditTechnician";
+import { NewTechnician } from "../pages/NewTechnician";
 import { DashboardLayout } from "../layouts/DashboardLayout";
 
 export function AppRoutes() {
@@ -20,7 +23,9 @@ export function AppRoutes() {
           <Route path="/new-ticket" element={<NewTicket />} />
           <Route path="/tickets/:id" element={<TicketDetail />} />
           <Route path="/tickets/:id/edit" element={<EditTicket />} />
-          <Route path="/technicians" element={<Dashboard />} />
+          <Route path="/technicians" element={<Technicians />} />
+          <Route path="/technicians/new" element={<NewTechnician />} />
+          <Route path="/technicians/:id/edit" element={<EditTechnician />} />
           <Route path="/customers" element={<Dashboard />} />
           <Route path="/services" element={<Dashboard />} />
           <Route path="*" element={<Navigate to="/" replace />} />

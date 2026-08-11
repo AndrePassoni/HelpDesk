@@ -114,7 +114,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
     : "U";
 
   const isTechnician = userData.role === "TECHNICIAN";
-  const availableHours = userData.availableHours || [];
+  const availableHours = [...(userData.availableHours || [])].sort();
 
   if (!isOpen) return null;
 
