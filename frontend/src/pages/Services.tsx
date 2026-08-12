@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Plus, Pencil, Ban, CircleCheck, Loader2 } from "lucide-react";
 import { api } from "../services/api";
 import { EditServiceModal } from "../components/EditServiceModal";
+import { NewServiceModal } from "../components/NewServiceModal";
 
 interface Service {
   id: string;
@@ -20,6 +21,7 @@ export function Services() {
   const [loading, setLoading] = useState(true);
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [editingService, setEditingService] = useState<Service | null>(null);
+  const [isNewServiceOpen, setIsNewServiceOpen] = useState(false);
 
   useEffect(() => {
     api
@@ -53,7 +55,7 @@ export function Services() {
         <h1 className="text-2xl font-bold text-brand-dark">Serviços</h1>
 
         <button
-          onClick={() => {}}
+          onClick={() => setIsNewServiceOpen(true)}
           className="h-10 bg-gray-200 hover:bg-gray-100 text-gray-600 font-bold text-sm rounded-lg px-4 flex items-center gap-2 transition-colors"
         >
           <Plus size={18} />
@@ -148,6 +150,14 @@ export function Services() {
         onClose={() => setEditingService(null)}
         onSaved={(updated) => {
           setServices((prev) => prev.map((s) => (s.id === updated.id ? updated : s)));
+        }}
+      />
+
+      <NewServiceModal
+        isOpen={isNewServiceOpen}
+        onClose={() => setIsNewServiceOpen(false)}
+        onCreated={(created) => {
+          setServices((prev) => [...prev, created]);
         }}
       />
     </div>
