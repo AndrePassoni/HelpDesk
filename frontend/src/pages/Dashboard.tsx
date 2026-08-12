@@ -43,15 +43,15 @@ export function Dashboard() {
 
   return (
     <div className="flex flex-col w-full h-full pb-8 max-w-full">
-      <header className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-100">
-            {role === "ADMIN" ? "Chamados" : "Meus chamados"}
-          </h1>
+      <header className="flex flex-col mb-4 md:mb-6">
+        <h1 className="text-xl md:text-2xl font-bold text-brand-base">
+          {role === "ADMIN" ? "Chamados" : "Meus chamados"}
+        </h1>
+        {role === "ADMIN" && (
           <p className="text-sm text-gray-400 mt-1">
             Gerencie e acompanhe todos os chamados abertos.
           </p>
-        </div>
+        )}
       </header>
 
       {role !== "TECHNICIAN" && (
