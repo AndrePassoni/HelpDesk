@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Trash2, Pencil, Loader2 } from "lucide-react";
 import { api } from "../services/api";
 import { getInitials } from "../mocks/tickets";
+import { EditClientModal } from "../components/EditClientModal";
+import { DeleteClientModal } from "../components/DeleteClientModal";
 
 interface Client {
   id: string;
@@ -13,6 +15,9 @@ interface Client {
 export function Customers() {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingClient, setEditingClient] = useState<Client | null>(null);
+  const [deletingClient, setDeletingClient] = useState<Client | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     api
@@ -21,6 +26,20 @@ export function Customers() {
       .catch((err) => console.error("Erro ao carregar clientes:", err))
       .finally(() => setLoading(false));
   }, []);
+
+  async function handleDeleteClient() {
+    if (!deletingClient) return;
+    setIsDeleting(true);
+    try {
+      await api.delete(`/users/${deletingClient.id}`);
+      setClients((prev) => prev.filter((c) => c.id !== deletingClient.id));
+      setDeletingClient(null);
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Erro ao excluir cliente");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <div className="flex flex-col w-full h-full pb-8 max-w-full">
@@ -72,13 +91,13 @@ export function Customers() {
                     <td className="py-3 px-4 md:py-4 md:px-6 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button
-                          onClick={() => {}}
+                          onClick={() => setDeletingClient(client)}
                           className="p-2 bg-gray-500 hover:bg-gray-400 rounded-lg text-feedback-danger transition-colors"
                         >
                           <Trash2 size={16} />
                         </button>
                         <button
-                          onClick={() => {}}
+                          onClick={() => setEditingClient(client)}
                           className="p-2 bg-gray-500 hover:bg-gray-400 rounded-lg text-gray-300 transition-colors"
                         >
                           <Pencil size={16} />
@@ -100,6 +119,23 @@ export function Customers() {
           </div>
         </div>
       )}
+
+      <EditClientModal
+        isOpen={editingClient !== null}
+        client={editingClient}
+        onClose={() => setEditingClient(null)}
+        onSaved={(updated) => {
+          setClients((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
+        }}
+      />
+
+      <DeleteClientModal
+        isOpen={deletingClient !== null}
+        clientName={deletingClient?.name ?? ""}
+        deleting={isDeleting}
+        onClose={() => setDeletingClient(null)}
+        onConfirm={handleDeleteClient}
+      />
     </div>
   );
 }
