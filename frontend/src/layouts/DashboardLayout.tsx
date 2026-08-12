@@ -55,7 +55,7 @@ export function DashboardLayout() {
       <main className="flex-1 md:ml-64 pt-3 flex flex-col min-h-0 relative z-10">
         {/* Rounded panel */}
         <div className="flex-1 min-h-0 bg-gray-600 rounded-tl-[15px] rounded-tr-[15px] md:rounded-tr-none md:rounded-tl-[20px] overflow-hidden">
-          <div className="h-full overflow-y-auto custom-scrollbar p-4 md:px-12 md:py-12">
+          <div className="h-full overflow-y-auto custom-scrollbar px-6 pt-7 pb-6 md:px-12 md:py-12">
             <Outlet />
           </div>
         </div>
