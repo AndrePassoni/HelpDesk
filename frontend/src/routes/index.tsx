@@ -11,6 +11,7 @@ import { Technicians } from "../pages/Technicians";
 import { EditTechnician } from "../pages/EditTechnician";
 import { NewTechnician } from "../pages/NewTechnician";
 import { Customers } from "../pages/Customers";
+import { Services } from "../pages/Services";
 import { DashboardLayout } from "../layouts/DashboardLayout";
 
 export function AppRoutes() {
@@ -28,7 +29,7 @@ export function AppRoutes() {
           <Route path="/technicians/new" element={<NewTechnician />} />
           <Route path="/technicians/:id/edit" element={<EditTechnician />} />
           <Route path="/customers" element={<Customers />} />
-          <Route path="/services" element={<Dashboard />} />
+          <Route path="/services" element={<Services />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       ) : (

@@ -5,8 +5,11 @@ import { AppError } from "../utils/AppError";
 
 export class ServicesController {
   async index(request: Request, response: Response) {
+    const isAdmin = request.user?.role === "ADMIN";
+
     const services = await prisma.service.findMany({
-      where: { isActive: true },
+      where: isAdmin ? {} : { isActive: true },
+      orderBy: { createdAt: "asc" },
     });
 
     return response.json(services);
@@ -41,10 +44,11 @@ export class ServicesController {
       name: z.string().min(2).optional(),
       description: z.string().optional(),
       price: z.number().min(0).optional(),
+      isActive: z.boolean().optional(),
     });
 
     const { id } = paramsSchema.parse(request.params);
-    const { name, description, price } = updateSchema.parse(request.body);
+    const { name, description, price, isActive } = updateSchema.parse(request.body);
 
     const service = await prisma.service.findUnique({
       where: { id },
@@ -60,6 +64,7 @@ export class ServicesController {
         name: name ?? service.name,
         description: description ?? service.description,
         price: price ?? service.price,
+        isActive: isActive ?? service.isActive,
       },
     });
 
