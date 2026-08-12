@@ -3,6 +3,7 @@ import { Clock2, HelpCircle, CircleCheckBig } from "lucide-react";
 interface StatusTagProps {
   status: "open" | "progress" | "done";
   label?: string;
+  iconOnly?: boolean;
 }
 
 const statusConfig = {
@@ -29,9 +30,17 @@ const statusConfig = {
   },
 };
 
-export function StatusTag({ status, label }: StatusTagProps) {
+export function StatusTag({ status, label, iconOnly = false }: StatusTagProps) {
   const config = statusConfig[status];
   const Icon = config.icon;
+
+  if (iconOnly) {
+    return (
+      <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full ${config.bg} ${config.text}`}>
+        <Icon size={14} />
+      </span>
+    );
+  }
 
   return (
     <span

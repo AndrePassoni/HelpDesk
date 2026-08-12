@@ -11,13 +11,14 @@ interface AddServicesModalProps {
 }
 
 export function AddServicesModal({ isOpen, onClose, onAddServices, existingServiceIds }: AddServicesModalProps) {
-  const [availableServices, setAvailableServices] = useState<Service[]>([]);
+  const [allServices, setAllServices] = useState<Service[]>([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (isOpen) {
       loadServices();
+      setSelectedIds([]);
     }
   }, [isOpen]);
 
@@ -25,10 +26,7 @@ export function AddServicesModal({ isOpen, onClose, onAddServices, existingServi
     setLoading(true);
     try {
       const res = await api.get("/services");
-      // Filter out services already added to the ticket
-      const filtered = res.data.filter((s: Service) => !existingServiceIds.includes(s.id));
-      setAvailableServices(filtered);
-      setSelectedIds([]);
+      setAllServices(res.data);
     } catch (err) {
       alert("Erro ao carregar serviços");
     } finally {
@@ -36,12 +34,16 @@ export function AddServicesModal({ isOpen, onClose, onAddServices, existingServi
     }
   }
 
+  // Mostra todos os serviços; os já adicionados ficam desabilitados
+  const isAlreadyAdded = (id: string) => existingServiceIds.includes(id);
+
   function toggleService(id: string) {
+    if (isAlreadyAdded(id)) return;
     setSelectedIds((prev) => prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]);
   }
 
   function handleConfirm() {
-    const servicesToAdd = availableServices.filter((s) => selectedIds.includes(s.id));
+    const servicesToAdd = allServices.filter((s) => selectedIds.includes(s.id) && !isAlreadyAdded(s.id));
     onAddServices(servicesToAdd);
     onClose();
   }
@@ -68,21 +70,25 @@ export function AddServicesModal({ isOpen, onClose, onAddServices, existingServi
             <div className="flex items-center justify-center py-10">
               <Loader2 className="animate-spin text-brand-base" size={24} />
             </div>
-          ) : availableServices.length === 0 ? (
+          ) : allServices.length === 0 ? (
             <div className="text-center py-10 text-gray-400">
-              Nenhum serviço disponível para adicionar
+              Nenhum serviço cadastrado
             </div>
           ) : (
             <div className="flex flex-col gap-3 max-h-80 overflow-y-auto">
-              {availableServices.map((svc) => {
+              {allServices.map((svc) => {
                 const isSelected = selectedIds.includes(svc.id);
+                const alreadyAdded = isAlreadyAdded(svc.id);
                 return (
                   <button
                     key={svc.id}
                     type="button"
                     onClick={() => toggleService(svc.id)}
+                    disabled={alreadyAdded}
                     className={`flex items-center justify-between gap-4 p-3 rounded-[5px] border transition-colors ${
-                      isSelected
+                      alreadyAdded
+                        ? "bg-gray-500/30 border-gray-500 cursor-not-allowed opacity-50"
+                        : isSelected
                         ? "bg-brand-base/10 border-brand-base"
                         : "bg-gray-500 hover:bg-gray-400/20 border-gray-500 hover:border-gray-400"
                     }`}
@@ -92,17 +98,23 @@ export function AddServicesModal({ isOpen, onClose, onAddServices, existingServi
                       {svc.description && (
                         <span className="text-xs text-gray-400 line-clamp-1">{svc.description}</span>
                       )}
+                      {alreadyAdded && (
+                        <span className="text-xs text-gray-500 mt-1">Já adicionado</span>
+                      )}
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-bold text-gray-100 whitespace-nowrap">
                         {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(svc.price)}
                       </span>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                        isSelected
+                        alreadyAdded
+                          ? "bg-gray-400 border-gray-400"
+                          : isSelected
                           ? "bg-brand-base border-brand-base"
                           : "border-gray-500"
                       }`}>
-                        {isSelected && <Check size={12} className="text-gray-600" />}
+                        {alreadyAdded && <Check size={12} className="text-gray-600" />}
+                        {isSelected && !alreadyAdded && <Check size={12} className="text-gray-600" />}
                       </div>
                     </div>
                   </button>
