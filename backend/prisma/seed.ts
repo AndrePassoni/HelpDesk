@@ -156,6 +156,7 @@ async function main() {
         status,
         clientId: client.id,
         technicianId: technician.id,
+        baseServiceId: selectedServices[0].id,
         services: {
           connect: selectedServices.map(s => ({ id: s.id })),
         },

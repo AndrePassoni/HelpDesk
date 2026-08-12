@@ -17,6 +17,7 @@ export interface Ticket {
   status: TicketStatus;
   clientId: string;
   technicianId: string;
+  baseServiceId: string;
   attachments: string[];
   createdAt: string;
   updatedAt: string;
@@ -31,6 +32,17 @@ export interface Ticket {
     imageUrl?: string | null;
   };
   services: Service[];
+}
+
+// O serviço "base" é a categoria escolhida na criação do chamado (não pode ser removida pelo Técnico).
+// Usar sempre essa função em vez de `services[0]`, que não tem ordem garantida.
+export function getMainService(ticket: Ticket): Service | undefined {
+  return ticket.services.find((s) => s.id === ticket.baseServiceId) ?? ticket.services[0];
+}
+
+export function getAdditionalServices(ticket: Ticket): Service[] {
+  const mainService = getMainService(ticket);
+  return ticket.services.filter((s) => s.id !== mainService?.id);
 }
 
 export function getInitials(name: string): string {

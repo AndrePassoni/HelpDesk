@@ -71,7 +71,7 @@ export class TicketsController {
       title: z.string().min(3),
       description: z.string().min(5),
       technicianId: z.string().uuid(),
-      serviceIds: z.array(z.string().uuid()).optional().default([]),
+      serviceIds: z.array(z.string().uuid()).min(1, "Selecione ao menos um serviço"),
     });
 
     // Como pode vir FormData (por causa dos anexos), usamos .parse
@@ -106,6 +106,7 @@ export class TicketsController {
         clientId,
         technicianId,
         attachments,
+        baseServiceId: serviceIds[0], // primeiro serviço selecionado = categoria original do chamado
         services: {
           connect: serviceIds.map((id) => ({ id })),
         },
@@ -153,7 +154,9 @@ export class TicketsController {
         status: status ?? ticket.status,
         services: serviceIds
           ? {
-            set: serviceIds.map((serviceId) => ({ id: serviceId })),
+            // Garante que o serviço base nunca seja desconectado, mesmo que
+            // não venha na lista enviada pelo front (defesa contra bug de sincronização)
+            set: Array.from(new Set([...serviceIds, ticket.baseServiceId])).map((serviceId) => ({ id: serviceId })),
           }
           : undefined,
       },

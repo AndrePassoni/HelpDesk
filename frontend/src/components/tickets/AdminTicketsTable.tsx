@@ -1,7 +1,7 @@
 import { Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import type { Ticket } from "../../mocks/tickets";
-import { getInitials, formatDate, formatCurrency, mapStatus } from "../../mocks/tickets";
+import { getInitials, formatDate, formatCurrency, mapStatus, getMainService } from "../../mocks/tickets";
 import { StatusTag } from "../StatusTag";
 
 interface AdminTicketsTableProps {
@@ -29,7 +29,7 @@ export function AdminTicketsTable({ tickets }: AdminTicketsTableProps) {
           </thead>
           <tbody className="divide-y divide-gray-500">
             {tickets.map((ticket) => {
-              const mainService = ticket.services[0];
+              const mainService = getMainService(ticket);
               const total = ticket.services.reduce((sum, s) => sum + s.price, 0);
               return (
                 <tr key={ticket.id} className="hover:bg-gray-600/50 transition-colors">

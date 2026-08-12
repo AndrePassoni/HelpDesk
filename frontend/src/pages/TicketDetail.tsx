@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Loader2, AlertCircle, Clock, CheckCircle2 } from "lucide-react";
 import { api } from "../services/api";
 import type { Ticket } from "../mocks/tickets";
-import { getInitials, formatDate, formatCurrency, mapStatus } from "../mocks/tickets";
+import { getInitials, formatDate, formatCurrency, mapStatus, getMainService, getAdditionalServices } from "../mocks/tickets";
 
 const statusConfigMap = {
   open: { bg: "bg-feedback-open/20", text: "text-feedback-open", label: "Aberto", icon: AlertCircle },
@@ -47,9 +47,9 @@ export function TicketDetail() {
   const uiStatus = mapStatus(ticket.status);
   const statusCfg = statusConfigMap[uiStatus];
   const StatusIcon = statusCfg.icon;
-  const mainService = ticket.services[0];
-  const additionalServices = ticket.services.slice(1);
-  const basePrice = mainService?.price ?? ticket.services[0]?.price ?? 0;
+  const mainService = getMainService(ticket);
+  const additionalServices = getAdditionalServices(ticket);
+  const basePrice = mainService?.price ?? 0;
   const additionalTotal = additionalServices.reduce((s, svc) => s + svc.price, 0);
   const total = ticket.services.reduce((s, svc) => s + svc.price, 0);
 

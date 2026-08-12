@@ -2,7 +2,7 @@ import { PencilLine, Clock2, CircleCheckBig } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../services/api";
 import type { Ticket, TicketStatus } from "../../mocks/tickets";
-import { getInitials, formatDate, formatCurrency, mapStatus } from "../../mocks/tickets";
+import { getInitials, formatDate, formatCurrency, mapStatus, getMainService } from "../../mocks/tickets";
 import { StatusTag } from "../StatusTag";
 import { StatusIndicator } from "../StatusIndicator";
 
@@ -61,7 +61,7 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {groupTickets.map((ticket) => {
-                const mainService = ticket.services[0];
+                const mainService = getMainService(ticket);
                 const total = ticket.services.reduce((sum, s) => sum + s.price, 0);
                 return (
                   <div

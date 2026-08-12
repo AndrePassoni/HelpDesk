@@ -83,8 +83,8 @@ export function AddServicesModal({ isOpen, onClose, onAddServices, existingServi
                     onClick={() => toggleService(svc.id)}
                     className={`flex items-center justify-between gap-4 p-3 rounded-[5px] border transition-colors ${
                       isSelected
-                        ? "bg-brand-dark border-brand-base"
-                        : "bg-gray-500 hover:bg-gray-400 border-gray-500"
+                        ? "bg-brand-base/10 border-brand-base"
+                        : "bg-gray-500 hover:bg-gray-400/20 border-gray-500 hover:border-gray-400"
                     }`}
                   >
                     <div className="flex flex-col flex-1 text-left">

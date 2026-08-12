@@ -33,8 +33,9 @@ export function EditTicket() {
   const isTechnician = user?.role === "TECHNICIAN";
   const isAdmin = user?.role === "ADMIN";
 
-  const mainService = services[0];
-  const additionalServices = services.slice(1);
+  // O serviço base é a categoria original do chamado (baseServiceId), não o primeiro item do array
+  const mainService = services.find((s) => s.id === ticket?.baseServiceId) ?? services[0];
+  const additionalServices = services.filter((s) => s.id !== mainService?.id);
   const basePrice = mainService?.price ?? 0;
   const total = services.reduce((s, svc) => s + svc.price, 0);
 
@@ -52,11 +53,27 @@ export function EditTicket() {
   }
 
   function handleRemoveService(serviceId: string) {
-    setServices((prev) => prev.filter((s) => s.id !== serviceId));
+    if (serviceId === ticket?.baseServiceId) return; // segurança: nunca remove o serviço base
+    const previous = services;
+    const updated = services.filter((s) => s.id !== serviceId);
+    setServices(updated);
+    persistServices(updated, previous);
   }
 
   function handleAddServices(newServices: Service[]) {
-    setServices((prev) => [...prev, ...newServices]);
+    const previous = services;
+    const updated = [...services, ...newServices];
+    setServices(updated);
+    persistServices(updated, previous);
+  }
+
+  async function persistServices(updated: Ticket["services"], previous: Ticket["services"]) {
+    try {
+      await api.put(`/tickets/${id}`, { serviceIds: updated.map((s) => s.id) });
+    } catch (err) {
+      alert("Erro ao salvar serviços do chamado");
+      setServices(previous);
+    }
   }
 
   const existingServiceIds = services.map((s) => s.id);

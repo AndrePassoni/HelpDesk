@@ -42,7 +42,8 @@ model Service {
   price       Float
   isActive    Boolean  @default(true) // Usado para Soft Delete
 
-  tickets     Ticket[] // Relacionamento NxN com Chamados
+  tickets     Ticket[] // Relacionamento NxN com Chamados (Base + Adicionais)
+  baseTickets Ticket[] @relation("BaseService") // Chamados onde este serviço é a categoria original (selecionada na criação)
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -61,6 +62,10 @@ model Ticket {
   technician   User         @relation("TechnicianTickets", fields: [technicianId], references: [id])
   
   services     Service[]    // Serviços vinculados a este chamado (Base + Adicionais)
+
+  baseServiceId String
+  baseService   Service      @relation("BaseService", fields: [baseServiceId], references: [id]) // Serviço/categoria selecionado na criação do chamado (não é removido pelo Técnico)
+
   attachments  String[]     // Nomes dos arquivos de anexos salvos
   
   createdAt    DateTime     @default(now())
