@@ -68,21 +68,21 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
                     key={ticket.id}
                     className="bg-white border border-gray-500 rounded-xl p-4 md:p-5 shadow-sm flex flex-col hover:border-brand-base transition-colors"
                   >
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center justify-between mb-3">
                       <span className="text-sm font-bold text-gray-400">
                         {String(ticket.id).padStart(5, "0")}
                       </span>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() => navigate(`/tickets/${ticket.id}/edit`)}
-                          className="p-2 bg-gray-500 hover:bg-gray-400 rounded-lg text-gray-300 transition-colors"
+                          className="p-1.5 bg-gray-500 hover:bg-gray-400 rounded-[5px] text-gray-200 transition-colors"
                         >
                           <PencilLine size={16} />
                         </button>
                         {status === "OPEN" && (
                           <button
                             onClick={() => handleUpdateStatus(ticket.id, "IN_PROGRESS")}
-                            className="flex items-center gap-1.5 px-2 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-white rounded-[5px] text-xs font-bold transition-colors"
                           >
                             <Clock2 size={12} />
                             Iniciar
@@ -91,7 +91,7 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
                         {status === "IN_PROGRESS" && (
                           <button
                             onClick={() => handleUpdateStatus(ticket.id, "CLOSED")}
-                            className="flex items-center gap-1.5 px-2 py-1.5 bg-gray-200 hover:bg-gray-100 text-gray-600 rounded-lg text-xs font-bold transition-colors"
+                            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-white rounded-[5px] text-xs font-bold transition-colors"
                           >
                             <CircleCheckBig size={12} />
                             Encerrar
@@ -100,20 +100,23 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
                       </div>
                     </div>
 
-                    <div className="mb-6">
+                    <div className="mb-4">
                       <h3 className="text-base font-bold text-gray-100 line-clamp-1">{ticket.title}</h3>
-                      <p className="text-xs text-gray-400 mt-1">{mainService?.name ?? "-"}</p>
+                      <p className="text-xs font-normal text-gray-300 mt-0.5">{mainService?.name ?? "-"}</p>
                     </div>
-
-                    <div className="w-full h-px bg-gray-500 my-4" />
 
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-xs text-gray-400">{formatDate(ticket.updatedAt)}</span>
-                      <span className="text-sm font-bold text-gray-100">{formatCurrency(total)}</span>
+                      <span className="text-[12px] font-normal text-gray-200">{formatDate(ticket.updatedAt)}</span>
+                      <span className="text-sm font-bold text-gray-100">
+                        <span className="text-[10px] font-bold text-gray-300 mr-1">R$</span>
+                        {total.toFixed(2).replace(".", ",")}
+                      </span>
                     </div>
 
+                    <div className="w-full h-px bg-gray-500 mb-4" />
+
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <div className="w-6 h-6 rounded-full bg-brand-dark flex items-center justify-center text-[10px] font-bold text-gray-600 uppercase shrink-0 relative overflow-hidden">
                           {ticket.client.imageUrl ? (
                             <img
@@ -125,7 +128,7 @@ export function TechnicianTicketsGrid({ tickets }: TechnicianTicketsGridProps) {
                             getInitials(ticket.client.name)
                           )}
                         </div>
-                        <span className="text-xs font-bold text-gray-100 whitespace-nowrap">
+                        <span className="text-[12px] font-bold text-gray-100 whitespace-nowrap">
                           {ticket.client.name}
                         </span>
                       </div>
