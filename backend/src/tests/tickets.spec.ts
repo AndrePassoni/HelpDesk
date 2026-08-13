@@ -6,10 +6,20 @@ import bcrypt from "bcryptjs";
 describe("TicketsController", () => {
   let clientToken = "";
   let techId = "";
+  let serviceId = "";
   let ticketId = 0;
 
   beforeAll(async () => {
     const password = await bcrypt.hash("pass123", 8);
+
+    // Criar serviço
+    const service = await prisma.service.create({
+      data: {
+        name: "Test Service Tickets",
+        price: 100.5,
+      },
+    });
+    serviceId = service.id;
 
     // Criar técnico
     const tech = await prisma.user.upsert({
@@ -50,6 +60,9 @@ describe("TicketsController", () => {
     await prisma.ticket.deleteMany({
       where: { title: "Test Ticket" },
     });
+    await prisma.service.delete({
+      where: { id: serviceId }
+    });
     await prisma.$disconnect();
   });
 
@@ -61,6 +74,7 @@ describe("TicketsController", () => {
         title: "Test Ticket",
         description: "This is a test description",
         technicianId: techId,
+        serviceIds: [serviceId],
       });
 
     expect(response.status).toBe(201);

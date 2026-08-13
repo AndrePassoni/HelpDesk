@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: helpdesk-api
+    env: node
+    region: ohio
+    plan: free
+    buildCommand: "npm install && npm run build && npx prisma generate && npx prisma migrate deploy && npx tsx prisma/seed.ts"
+    startCommand: "npm start"
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: PORT
+        value: 3333
