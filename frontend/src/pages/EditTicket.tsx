@@ -142,7 +142,7 @@ export function EditTicket() {
               <button
                 onClick={() => handleUpdateStatus("IN_PROGRESS")}
                 disabled={saving || ticket.status === "IN_PROGRESS"}
-                className="flex-1 md:flex-none h-10 bg-gray-500 hover:bg-gray-400 text-gray-200 font-bold text-sm rounded-[5px] px-2 flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+                className="flex-1 md:flex-none h-10 bg-gray-500 hover:bg-gray-400 text-gray-100 font-bold text-sm rounded-[5px] px-2 flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
               >
                 <Clock2 size={16} />
                 <span className="truncate">Em atendimento</span>
@@ -150,7 +150,7 @@ export function EditTicket() {
               <button
                 onClick={() => handleUpdateStatus("CLOSED")}
                 disabled={saving || ticket.status === "CLOSED"}
-                className="flex-1 md:flex-none h-10 bg-gray-500 hover:bg-gray-400 text-gray-200 font-bold text-sm rounded-[5px] px-2 flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+                className="flex-1 md:flex-none h-10 bg-gray-500 hover:bg-gray-400 text-gray-100 font-bold text-sm rounded-[5px] px-2 flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
               >
                 <CircleCheckBig size={16} />
                 Encerrado
@@ -259,8 +259,8 @@ export function EditTicket() {
               </div>
 
               {additionalServices.length > 0 && (
-                <div className="flex flex-col gap-2">
-                  <span className="text-[12px] font-normal text-gray-100">Adicionais</span>
+                <div className="flex flex-col gap-2 mt-2">
+                  <span className="text-[10px] font-bold uppercase text-gray-400">Adicionais</span>
                   {additionalServices.map((svc) => (
                     <div key={svc.id} className="flex items-center justify-between gap-2">
                       <span className="text-[12px] font-normal text-gray-200 flex-1">{svc.name}</span>
