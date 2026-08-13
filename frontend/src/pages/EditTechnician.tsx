@@ -91,8 +91,8 @@ export function EditTechnician() {
   return (
     <div className="flex flex-col w-full h-full pb-8 max-w-full">
       {/* Header */}
-      <div className="flex items-end justify-between gap-4 mb-8">
-        <div className="flex flex-col gap-4">
+      <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-4 mb-6 md:mb-8">
+        <div className="flex flex-col gap-2 md:gap-4 w-full md:w-auto">
           <button
             onClick={() => navigate("/technicians")}
             className="inline-flex items-center gap-2 text-xs font-normal text-gray-300 hover:text-gray-100 transition-colors"
@@ -103,18 +103,18 @@ export function EditTechnician() {
           <h1 className="text-2xl font-bold text-brand-dark">Perfil de técnico</h1>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3 w-full md:w-auto">
           <button
             onClick={() => navigate("/technicians")}
             disabled={saving}
-            className="h-10 bg-gray-500 hover:bg-gray-400 text-gray-200 font-bold text-sm rounded-lg px-4 transition-colors disabled:opacity-50"
+            className="flex-1 md:flex-none h-10 bg-gray-500 hover:bg-gray-400 text-gray-100 font-bold text-sm rounded-[5px] md:rounded-lg px-4 transition-colors disabled:opacity-50"
           >
             Cancelar
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className="h-10 bg-gray-200 hover:bg-gray-100 text-gray-600 font-bold text-sm rounded-lg px-4 flex items-center gap-2 transition-colors disabled:opacity-50"
+            className="flex-1 md:flex-none h-10 bg-gray-100 hover:bg-gray-100/90 text-white font-bold text-sm rounded-[5px] md:rounded-lg px-4 flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
           >
             {saving && <Loader2 size={16} className="animate-spin" />}
             {saving ? "Salvando..." : "Salvar"}
@@ -123,13 +123,13 @@ export function EditTechnician() {
       </div>
 
       {/* Content */}
-      <div className="flex flex-col md:flex-row gap-6 items-start">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6 items-start">
         {/* Dados pessoais */}
-        <div className="w-full md:w-100 shrink-0 border border-gray-500 rounded-[10px] p-6 flex flex-col gap-5">
+        <div className="w-full md:w-[480px] shrink-0 border border-gray-500 rounded-[10px] p-4 md:p-6 flex flex-col gap-5 bg-transparent">
           <div className="flex flex-col gap-1">
             <span className="text-base font-bold text-gray-100">Dados pessoais</span>
             <span className="text-xs font-normal text-gray-300">
-              Defina as informações do perfil do técnico
+              Defina as informações do perfil de técnico
             </span>
           </div>
 
@@ -177,7 +177,7 @@ export function EditTechnician() {
         </div>
 
         {/* Horários de atendimento */}
-        <div className="flex-1 min-w-0 border border-gray-500 rounded-[10px] p-6 flex flex-col gap-5">
+        <div className="flex-1 min-w-0 border border-gray-500 rounded-[10px] p-4 md:p-6 flex flex-col gap-5 bg-transparent">
           <div className="flex flex-col gap-1">
             <span className="text-base font-bold text-gray-100">Horários de atendimento</span>
             <span className="text-xs font-normal text-gray-300">
