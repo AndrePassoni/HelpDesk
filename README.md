@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./.github/assets/cover.png" alt="HelpDesk - Fullstack Challenge" width="100%" />
+  <img src="./.github/assets/cover.svg" alt="HelpDesk - Fullstack Challenge" width="100%" />
 
   <br />
   <br />
