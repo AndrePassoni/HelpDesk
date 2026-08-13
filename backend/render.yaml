@@ -2,6 +2,7 @@ services:
   - type: web
     name: helpdesk-api
     env: node
+    rootDir: backend
     region: ohio
     plan: free
     buildCommand: "npm install && npm run build && npx prisma generate && npx prisma migrate deploy && npx tsx prisma/seed.ts"
