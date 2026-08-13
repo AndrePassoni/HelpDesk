@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { X, Image as ImageIcon, Trash2, Lock, Loader2, Check } from "lucide-react";
+import { X, Upload, Trash2, Lock, Loader2, Check } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
 import { ChangePasswordModal } from "./ChangePasswordModal";
@@ -130,23 +130,23 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-110 bg-gray-600 rounded-[10px] border border-gray-500 shadow-xl overflow-hidden flex flex-col">
+      <div className="w-full max-w-110 bg-white rounded-[10px] shadow-xl overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-7 py-5">
-          <span className="text-base font-normal text-gray-200">Perfil</span>
+        <div className="flex items-center justify-between px-6 py-5">
+          <span className="text-lg font-bold text-gray-100">Perfil</span>
           <button
             onClick={handleCloseAll}
-            className="w-6 h-6 flex items-center justify-center text-gray-300 hover:text-gray-100 transition-colors"
+            className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-100 transition-colors"
           >
-            <X size={18} />
+            <X size={20} />
           </button>
         </div>
 
         {/* Form Body */}
-        <div className="flex flex-col gap-5 px-7 pt-7 pb-8 border-t border-b border-gray-500">
+        <div className="flex flex-col gap-5 px-6 pt-6 pb-8 border-t border-b border-gray-600">
           {/* Avatar & Actions */}
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-brand-base flex items-center justify-center text-gray-600 font-bold text-lg uppercase shrink-0 relative overflow-hidden">
+            <div className="w-14 h-14 rounded-full bg-brand-base flex items-center justify-center text-gray-600 font-bold text-xl uppercase shrink-0 relative overflow-hidden">
               {displayImage ? (
                 <img
                   src={displayImage}
@@ -163,9 +163,9 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                 type="button"
                 onClick={handleImageUpload}
                 disabled={saving}
-                className="h-7 px-2.5 bg-gray-500 rounded-[5px] flex items-center gap-2 text-xs font-bold text-feedback-done hover:bg-gray-400 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="h-8 px-3 bg-gray-600 rounded-md flex items-center gap-2 text-xs font-bold text-gray-100 hover:bg-gray-500 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? <Loader2 size={14} className="animate-spin text-gray-200" /> : <ImageIcon size={14} className="text-gray-200" />}
+                {saving ? <Loader2 size={14} className="animate-spin text-gray-400" /> : <Upload size={14} className="text-gray-100" />}
                 {saving ? "Carregando..." : "Nova imagem"}
               </button>
 
@@ -188,7 +188,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                   setSaved(false);
                 }}
                 disabled={saving || !hasChanges}
-                className="w-7 h-7 bg-gray-500 rounded-[5px] flex items-center justify-center text-feedback-danger hover:bg-gray-400 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-8 h-8 bg-gray-600 rounded-md flex items-center justify-center text-feedback-danger hover:bg-gray-500 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Trash2 size={14} />
               </button>
@@ -196,57 +196,56 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
           </div>
 
           {/* Fields */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 mt-2">
             {/* Nome */}
             <div className="flex flex-col">
-              <label className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.6px] leading-[1.4] mb-1">
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                 Nome
               </label>
-              <div className="h-10 border-b border-gray-500 flex items-center">
+              <div className="h-10 border-b border-gray-600 flex items-center pb-2">
                 <input
                   type="text"
                   readOnly
                   value={userData.name || "Usuário Cliente"}
-                  className="w-full bg-transparent text-base font-bold text-gray-100 focus:outline-none"
+                  className="w-full bg-transparent text-sm md:text-base font-normal text-gray-100 focus:outline-none"
                 />
               </div>
             </div>
 
             {/* E-mail */}
             <div className="flex flex-col">
-              <label className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.6px] leading-[1.4] mb-1">
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                 E-mail
               </label>
-              <div className="h-10 border-b border-gray-500 flex items-center">
+              <div className="h-10 border-b border-gray-600 flex items-center pb-2">
                 <input
                   type="email"
                   readOnly
                   value={userData.email || "user.client@test.com"}
-                  className="w-full bg-transparent text-base font-bold text-gray-400 focus:outline-none"
+                  className="w-full bg-transparent text-sm md:text-base font-normal text-gray-100 focus:outline-none"
                 />
               </div>
             </div>
 
             {/* Senha */}
             <div className="flex flex-col relative">
-              <label className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.6px] leading-[1.4] mb-1">
+              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">
                 Senha
               </label>
-              <div className="h-10 border-b border-gray-500 flex items-center justify-between pr-20">
+              <div className="h-10 border-b border-gray-600 flex items-center justify-between pr-20 pb-2">
                 <input
                   type="password"
                   readOnly
                   value="••••••••"
-                  className="w-full bg-transparent text-base font-bold text-gray-400 focus:outline-none"
+                  className="w-full bg-transparent text-base font-bold text-gray-100 focus:outline-none tracking-widest"
                 />
               </div>
               <button
                 type="button"
                 disabled={saving}
                 onClick={() => setShowPasswordModal(true)}
-                className="absolute right-0 bottom-1.5 h-7 px-2.5 bg-gray-500 rounded-[5px] flex items-center gap-1.5 text-xs font-bold text-feedback-done hover:bg-gray-400 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="absolute right-0 bottom-3 h-7 px-3 bg-gray-600 rounded-md flex items-center text-xs font-bold text-gray-100 hover:bg-gray-500 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Lock size={12} className="text-gray-200" />
                 Alterar
               </button>
             </div>
@@ -255,7 +254,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
 
         {/* Availability Section - Technician Only */}
         {isTechnician && availableHours.length > 0 && (
-          <div className="flex flex-col gap-3 px-7 py-5 border-t border-gray-500">
+          <div className="flex flex-col gap-3 px-7 py-5 border-t border-gray-600">
             <div className="flex flex-col">
               <span className="text-sm font-normal text-gray-200 leading-[1.4]">
                 Disponibilidade
@@ -268,7 +267,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
               {availableHours.map((hour: string) => (
                 <span
                   key={hour}
-                  className="inline-flex items-center justify-center px-2 py-1 rounded-full text-xs font-bold text-gray-300 border border-gray-500"
+                  className="inline-flex items-center justify-center px-2 py-1 rounded-full text-xs font-bold text-gray-400 border border-gray-600"
                 >
                   {hour}
                 </span>
@@ -278,12 +277,20 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
         )}
 
         {/* Footer */}
-        <div className="px-7 py-6 flex items-center justify-center">
+        <div className="px-6 py-6 flex items-center justify-center">
           <button
             type="button"
             onClick={handleSave}
             disabled={saving || !hasChanges || saved}
-            className={getSaveButtonClasses()}
+            className={`w-full py-3.5 rounded-md font-bold text-sm transition-colors flex items-center justify-center gap-2 ${
+              saving
+                ? "bg-gray-500 text-gray-200 cursor-not-allowed"
+                : saved
+                ? "bg-feedback-done text-gray-100 cursor-not-allowed"
+                : hasChanges
+                ? "bg-gray-100 text-white hover:bg-gray-200"
+                : "bg-gray-100 text-white opacity-50 cursor-not-allowed"
+            }`}
           >
             {saving && <Loader2 size={16} className="animate-spin" />}
             {saved && <Check size={16} />}

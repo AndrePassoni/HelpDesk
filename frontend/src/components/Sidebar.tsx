@@ -45,18 +45,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Backdrop para fechar o menu no mobile */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity"
-          onClick={onClose}
-        />
-      )}
-
       <aside 
-        className={`fixed left-0 top-0 z-50 w-64 min-h-screen bg-gray-100 flex flex-col justify-between border-r border-gray-200 transition-transform duration-300 ease-in-out md:translate-x-0 ${
-          isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
-        }`}
+        className="hidden md:flex fixed left-0 top-0 z-50 w-64 min-h-screen bg-gray-100 flex-col justify-between border-r border-gray-200"
       >
         <div>
           <div className="flex items-center gap-3 px-4 py-6 mb-4">

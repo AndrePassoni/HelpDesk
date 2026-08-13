@@ -16,7 +16,6 @@ interface Technician {
 const newTicketSchema = z.object({
   title: z.string().min(3, "O título é obrigatório"),
   description: z.string().min(10, "A descrição deve ter pelo menos 10 caracteres"),
-  technicianId: z.string().uuid("Selecione um técnico"),
   serviceId: z.string().min(1, "Selecione uma categoria de serviço"),
 });
 
@@ -40,7 +39,7 @@ export function NewTicket() {
     formState: { errors, isSubmitting },
   } = useForm<NewTicketForm>({
     resolver: zodResolver(newTicketSchema),
-    defaultValues: { title: "", description: "", serviceId: "", technicianId: "" },
+    defaultValues: { title: "", description: "", serviceId: "" },
   });
 
   const selectedServiceId = watch("serviceId");
@@ -48,10 +47,12 @@ export function NewTicket() {
 
   async function handleCreateTicket(data: NewTicketForm) {
     try {
+      const defaultTech = technicians.length > 0 ? technicians[0].id : undefined;
+      
       await api.post("/tickets", {
         title: data.title,
         description: data.description,
-        technicianId: data.technicianId,
+        technicianId: defaultTech,
         serviceIds: [data.serviceId],
       });
       alert("Chamado criado com sucesso!");
@@ -64,19 +65,19 @@ export function NewTicket() {
 
   return (
     <div className="flex flex-col w-full h-full">
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-brand-dark">Novo chamado</h1>
+      <header className="mb-4 md:mb-8">
+        <h1 className="text-xl md:text-3xl font-bold text-brand-base md:text-brand-dark">Novo chamado</h1>
       </header>
 
       <form
         onSubmit={handleSubmit(handleCreateTicket)}
-        className="flex flex-col xl:flex-row gap-6 w-full max-w-6xl"
+        className="flex flex-col xl:flex-row gap-4 md:gap-6 w-full max-w-6xl pb-8"
       >
-        <div className="flex-1 bg-white border border-gray-500 rounded-xl p-8 shadow-sm">
-          <div className="mb-8">
-            <h2 className="text-xl font-bold text-gray-100">Informações</h2>
-            <p className="text-sm text-gray-400 mt-1">
-              Descreva o problema que você está enfrentando e selecione o técnico desejado
+        <div className="flex-1 bg-white border border-gray-500 rounded-xl p-6 md:p-8 shadow-sm">
+          <div className="mb-6 md:mb-8">
+            <h2 className="text-lg md:text-xl font-bold text-gray-100">Informações</h2>
+            <p className="text-xs md:text-sm text-gray-400 mt-1">
+              Configure os dias e horários em que você está disponível para atender chamados
             </p>
           </div>
 
@@ -89,7 +90,7 @@ export function NewTicket() {
                 type="text"
                 placeholder="Digite um título para o chamado"
                 {...register("title")}
-                className={`w-full border-b py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:border-brand-base transition-colors bg-transparent ${errors.title ? "border-feedback-danger" : "border-gray-500"}`}
+                className={`w-full border-b py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:border-brand-base transition-colors bg-transparent text-sm md:text-base ${errors.title ? "border-feedback-danger" : "border-gray-500"}`}
               />
               {errors.title && (
                 <span className="text-feedback-danger text-xs mt-1 block font-bold">
@@ -106,7 +107,7 @@ export function NewTicket() {
                 placeholder="Descreva o que está acontecendo"
                 {...register("description")}
                 rows={4}
-                className={`w-full border-b py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:border-brand-base transition-colors bg-transparent resize-none ${errors.description ? "border-feedback-danger" : "border-gray-500"}`}
+                className={`w-full border-b py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:border-brand-base transition-colors bg-transparent resize-none text-sm md:text-base ${errors.description ? "border-feedback-danger" : "border-gray-500"}`}
               />
               {errors.description && (
                 <span className="text-feedback-danger text-xs mt-1 block font-bold">
@@ -121,7 +122,7 @@ export function NewTicket() {
               </label>
               <select
                 {...register("serviceId")}
-                className={`w-full border-b py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:border-brand-base transition-colors bg-transparent appearance-none cursor-pointer ${errors.serviceId ? "border-feedback-danger" : "border-gray-500"}`}
+                className={`w-full border-b py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:border-brand-base transition-colors bg-transparent appearance-none cursor-pointer text-sm md:text-base ${errors.serviceId ? "border-feedback-danger" : "border-gray-500"}`}
               >
                 <option value="" disabled className="text-gray-400">
                   Selecione a categoria de atendimento
@@ -138,38 +139,14 @@ export function NewTicket() {
                 </span>
               )}
             </div>
-
-            <div>
-              <label className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
-                Técnico
-              </label>
-              <select
-                {...register("technicianId")}
-                className={`w-full border-b py-2 text-gray-100 placeholder-gray-400 focus:outline-none focus:border-brand-base transition-colors bg-transparent appearance-none cursor-pointer ${errors.technicianId ? "border-feedback-danger" : "border-gray-500"}`}
-              >
-                <option value="" disabled className="text-gray-400">
-                  Selecione o técnico responsável
-                </option>
-                {technicians.map((tech) => (
-                  <option key={tech.id} value={tech.id} className="text-gray-100">
-                    {tech.name}
-                  </option>
-                ))}
-              </select>
-              {errors.technicianId && (
-                <span className="text-feedback-danger text-xs mt-1 block font-bold">
-                  {errors.technicianId.message}
-                </span>
-              )}
-            </div>
           </div>
         </div>
 
         <div className="w-full xl:w-80 shrink-0">
-          <div className="bg-white border border-gray-500 rounded-xl p-8 shadow-sm h-full flex flex-col">
+          <div className="bg-white border border-gray-500 rounded-xl p-6 md:p-8 shadow-sm h-full flex flex-col">
             <div className="mb-6">
-              <h2 className="text-xl font-bold text-gray-100">Resumo</h2>
-              <p className="text-sm text-gray-400 mt-1">Valores e detalhes</p>
+              <h2 className="text-lg md:text-xl font-bold text-gray-100">Resumo</h2>
+              <p className="text-xs md:text-sm text-gray-400 mt-1">Valores e detalhes</p>
             </div>
 
             <div className="flex-1 flex flex-col gap-6">
