@@ -12,9 +12,9 @@ export function AdminTicketsTable({ tickets }: AdminTicketsTableProps) {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white border border-gray-500 rounded-xl shadow-sm flex-1 w-full max-w-full overflow-hidden">
-      <div className="overflow-x-auto custom-scrollbar">
-        <table className="w-full text-left border-collapse table-fixed md:table-auto md:min-w-[1200px]">
+    <div className="bg-white border border-gray-500 rounded-xl shadow-sm flex-1 w-full max-w-full overflow-hidden flex flex-col">
+      <div className="overflow-auto custom-scrollbar flex-1">
+        <table className="w-full text-left border-collapse table-fixed min-w-full md:min-w-[800px]">
           <thead>
             <tr className="border-b border-gray-500">
               <th className="w-16 md:w-auto py-3 px-2 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">

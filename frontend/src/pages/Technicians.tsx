@@ -46,8 +46,8 @@ export function Technicians() {
           <Loader2 className="animate-spin text-brand-base" size={32} />
         </div>
       ) : (
-        <div className="bg-white border border-gray-500 rounded-xl shadow-sm flex-1 w-full max-w-full overflow-hidden">
-          <div className="overflow-x-auto custom-scrollbar">
+        <div className="bg-white border border-gray-500 rounded-xl shadow-sm flex-1 w-full max-w-full flex flex-col overflow-hidden">
+          <div className="overflow-auto custom-scrollbar flex-1">
             <table className="w-full text-left border-collapse table-fixed md:table-auto md:min-w-[800px]">
               <thead>
                 <tr className="border-b border-gray-500">
