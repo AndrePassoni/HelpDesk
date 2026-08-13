@@ -12,18 +12,21 @@ export function AdminTicketsTable({ tickets }: AdminTicketsTableProps) {
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white border border-gray-500 rounded-xl shadow-sm flex-1">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-[1200px]">
+    <div className="bg-white border border-gray-500 rounded-xl shadow-sm flex-1 w-full max-w-full overflow-hidden">
+      <div className="overflow-x-auto custom-scrollbar">
+        <table className="w-full text-left border-collapse min-w-full md:min-w-[1200px]">
           <thead>
             <tr className="border-b border-gray-500">
-              <th className="py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Atualizado em</th>
-              <th className="py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Id</th>
+              <th className="py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">
+                <span className="md:hidden">Atualiz...</span>
+                <span className="hidden md:inline">Atualizado em</span>
+              </th>
+              <th className="hidden md:table-cell py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Id</th>
               <th className="py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Título e Serviço</th>
-              <th className="py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider hidden md:table-cell">Valor total</th>
-              <th className="py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Cliente</th>
-              <th className="py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider hidden lg:table-cell">Técnico</th>
-              <th className="py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Status</th>
+              <th className="hidden md:table-cell py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Valor total</th>
+              <th className="hidden md:table-cell py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Cliente</th>
+              <th className="hidden lg:table-cell py-3 px-4 md:py-4 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider">Técnico</th>
+              <th className="py-3 px-2 md:px-6 font-bold text-[10px] text-gray-400 uppercase tracking-wider text-center md:text-left">Status</th>
               <th className="py-3 px-4 md:py-4 md:px-6"></th>
             </tr>
           </thead>
@@ -31,18 +34,26 @@ export function AdminTicketsTable({ tickets }: AdminTicketsTableProps) {
             {tickets.map((ticket) => {
               const mainService = getMainService(ticket);
               const total = ticket.services.reduce((sum, s) => sum + s.price, 0);
+              const dateStr = formatDate(ticket.updatedAt);
+              const [datePart, timePart] = dateStr.split(" ");
+              
               return (
                 <tr key={ticket.id} className="hover:bg-gray-600/50 transition-colors">
-                  <td className="py-3 px-4 md:py-4 md:px-6 text-sm text-gray-400 whitespace-nowrap">{formatDate(ticket.updatedAt)}</td>
-                  <td className="py-3 px-4 md:py-4 md:px-6 text-sm font-bold text-gray-100">{String(ticket.id).padStart(5, "0")}</td>
-                  <td className="py-3 px-4 md:py-4 md:px-6">
-                    <div className="flex flex-col">
-                      <span className="text-sm font-bold text-gray-100 max-w-[250px] truncate">{ticket.title}</span>
-                      <span className="text-[10px] text-gray-400 hidden md:block">{mainService?.name ?? "-"}</span>
+                  <td className="py-3 px-4 md:py-4 md:px-6 text-sm text-gray-400 whitespace-nowrap">
+                    <div className="flex flex-col md:flex-row md:gap-1 text-[10px] md:text-sm">
+                      <span>{datePart}</span>
+                      <span>{timePart}</span>
                     </div>
                   </td>
-                  <td className="py-3 px-4 md:py-4 md:px-6 text-sm text-gray-400 whitespace-nowrap hidden md:table-cell">{formatCurrency(total)}</td>
+                  <td className="hidden md:table-cell py-3 px-4 md:py-4 md:px-6 text-sm font-bold text-gray-100">{String(ticket.id).padStart(5, "0")}</td>
                   <td className="py-3 px-4 md:py-4 md:px-6">
+                    <div className="flex flex-col">
+                      <span className="text-[12px] md:text-sm font-bold text-gray-100 max-w-[140px] md:max-w-[250px] truncate">{ticket.title}</span>
+                      <span className="text-[10px] text-gray-400 max-w-[140px] md:max-w-[250px] truncate">{mainService?.name ?? "-"}</span>
+                    </div>
+                  </td>
+                  <td className="hidden md:table-cell py-3 px-4 md:py-4 md:px-6 text-sm text-gray-400 whitespace-nowrap">{formatCurrency(total)}</td>
+                  <td className="hidden md:table-cell py-3 px-4 md:py-4 md:px-6">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-brand-dark flex items-center justify-center text-[10px] font-bold text-gray-600 uppercase shrink-0 relative overflow-hidden">
                         {ticket.client.imageUrl ? (
@@ -58,7 +69,7 @@ export function AdminTicketsTable({ tickets }: AdminTicketsTableProps) {
                       <span className="text-sm text-gray-400 whitespace-nowrap truncate max-w-[150px]">{ticket.client.name}</span>
                     </div>
                   </td>
-                  <td className="py-3 px-4 md:py-4 md:px-6 hidden lg:table-cell">
+                  <td className="hidden lg:table-cell py-3 px-4 md:py-4 md:px-6">
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-brand-base flex items-center justify-center text-[10px] font-bold text-gray-100 uppercase shrink-0 relative overflow-hidden">
                         {ticket.technician.imageUrl ? (
@@ -74,15 +85,22 @@ export function AdminTicketsTable({ tickets }: AdminTicketsTableProps) {
                       <span className="text-sm text-gray-400 whitespace-nowrap truncate max-w-[150px]">{ticket.technician.name}</span>
                     </div>
                   </td>
-                  <td className="py-3 px-4 md:py-4 md:px-6">
-                    <StatusTag status={mapStatus(ticket.status)} />
+                  <td className="py-3 px-2 md:px-6">
+                    <div className="flex items-center justify-center md:justify-start">
+                      <div className="md:hidden">
+                        <StatusTag status={mapStatus(ticket.status)} iconOnly />
+                      </div>
+                      <div className="hidden md:block">
+                        <StatusTag status={mapStatus(ticket.status)} />
+                      </div>
+                    </div>
                   </td>
-                  <td className="py-3 px-4 md:py-4 md:px-6 text-right">
+                  <td className="py-3 px-2 pr-4 md:py-4 md:px-6 text-right">
                     <button
                       onClick={() => navigate(`/tickets/${ticket.id}/edit`)}
-                      className="p-2 bg-gray-500 hover:bg-gray-400 rounded-lg text-gray-300 transition-colors"
+                      className="p-2 md:p-2 bg-gray-500 hover:bg-gray-400 rounded-lg text-gray-300 transition-colors"
                     >
-                      <Pencil size={16} />
+                      <Pencil size={14} className="md:w-4 md:h-4" />
                     </button>
                   </td>
                 </tr>
