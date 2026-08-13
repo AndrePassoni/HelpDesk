@@ -15,8 +15,8 @@ export function DeleteClientModal({ isOpen, clientName, deleting, onClose, onCon
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-115 bg-gray-600 rounded-[10px] border border-gray-500 shadow-xl overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between px-7 py-5">
-          <span className="text-base font-normal text-gray-200">Excluir cliente</span>
+        <div className="flex items-center justify-between px-5 md:px-7 py-5">
+          <span className="text-base font-bold text-gray-100">Excluir cliente</span>
           <button
             onClick={onClose}
             disabled={deleting}
@@ -27,7 +27,7 @@ export function DeleteClientModal({ isOpen, clientName, deleting, onClose, onCon
         </div>
 
         {/* Body */}
-        <div className="flex flex-col gap-3 px-7 py-7 border-t border-gray-500">
+        <div className="flex flex-col gap-3 px-5 md:px-7 py-5 md:py-7 border-t border-gray-500">
           <p className="text-base font-bold text-gray-100">
             Deseja realmente excluir {clientName}?
           </p>
@@ -37,12 +37,12 @@ export function DeleteClientModal({ isOpen, clientName, deleting, onClose, onCon
         </div>
 
         {/* Footer */}
-        <div className="px-7 py-6 flex items-center gap-3">
+        <div className="px-5 md:px-7 py-5 md:py-6 flex items-center gap-3">
           <button
             type="button"
             onClick={onClose}
             disabled={deleting}
-            className="flex-1 h-10 bg-gray-500 hover:bg-gray-400 text-gray-200 font-bold text-sm rounded-[5px] transition-colors disabled:opacity-50"
+            className="flex-1 h-10 bg-gray-500 hover:bg-gray-400 text-gray-100 font-bold text-sm rounded-[5px] transition-colors disabled:opacity-50"
           >
             Cancelar
           </button>
@@ -50,7 +50,7 @@ export function DeleteClientModal({ isOpen, clientName, deleting, onClose, onCon
             type="button"
             onClick={onConfirm}
             disabled={deleting}
-            className="flex-1 h-10 bg-gray-200 hover:bg-gray-100 text-gray-600 font-bold text-sm rounded-[5px] flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+            className="flex-1 h-10 bg-gray-100 hover:bg-gray-100/90 text-white font-bold text-sm rounded-[5px] flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
           >
             {deleting && <Loader2 size={16} className="animate-spin" />}
             {deleting ? "Excluindo..." : "Sim, excluir"}
