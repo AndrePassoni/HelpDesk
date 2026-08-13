@@ -10,7 +10,7 @@ interface SidebarProps {
   onClose: () => void;
 }
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+export function Sidebar({ onClose }: SidebarProps) {
   const { user, signOut } = useAuth();
   const role = user?.role || "CLIENT";
 

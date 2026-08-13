@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { X, Upload, Trash2, Lock, Loader2, Check } from "lucide-react";
+import { X, Upload, Trash2, Loader2, Check } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { api } from "../services/api";
 import { ChangePasswordModal } from "./ChangePasswordModal";
@@ -95,12 +95,6 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
 
   const userData = user || { name: "Usuário Cliente", email: "user.client@test.com", imageUrl: null, role: "CLIENT" as const, availableHours: [] as string[] };
 
-  const getSaveButtonClasses = () => {
-    if (saving) return "w-full h-10 rounded-[5px] font-bold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2 bg-gray-500 text-gray-200 cursor-not-allowed";
-    if (saved) return "w-full h-10 rounded-[5px] font-bold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2 bg-feedback-done text-gray-100 cursor-not-allowed";
-    if (hasChanges) return "w-full h-10 rounded-[5px] font-bold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2 bg-gray-200 text-gray-600 hover:bg-gray-100";
-    return "w-full h-10 rounded-[5px] font-bold text-sm transition-colors cursor-pointer flex items-center justify-center gap-2 bg-gray-500 text-gray-400 cursor-not-allowed";
-  };
 
   const displayImage = previewUrl || (userData.imageUrl ? `http://localhost:3333/files/${userData.imageUrl}` : null);
 

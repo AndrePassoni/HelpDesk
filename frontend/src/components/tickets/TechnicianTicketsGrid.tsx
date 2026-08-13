@@ -2,7 +2,7 @@ import { PencilLine, Clock2, CircleCheckBig } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../services/api";
 import type { Ticket, TicketStatus } from "../../mocks/tickets";
-import { getInitials, formatDate, formatCurrency, mapStatus, getMainService } from "../../mocks/tickets";
+import { getInitials, formatDate, mapStatus, getMainService } from "../../mocks/tickets";
 import { StatusTag } from "../StatusTag";
 import { StatusIndicator } from "../StatusIndicator";
 
